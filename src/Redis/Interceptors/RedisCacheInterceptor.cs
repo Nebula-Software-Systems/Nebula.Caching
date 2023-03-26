@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspectCore.DynamicProxy;
 using Microsoft.Extensions.DependencyInjection;
-using Nebula.Caching.src.Attributes;
+using Nebula.Caching.Redis.Attributes;
 using StackExchange.Redis;
 
-namespace Nebula.Caching.src.Interceptors
+namespace Nebula.Caching.Redis.Interceptors
 {
     public class RedisCacheInterceptor : AbstractInterceptorAttribute
     {
