@@ -2,6 +2,7 @@ using AspectCore.Configuration;
 using AspectCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.CacheManager;
+using Nebula.Caching.Redis.CacheManager;
 using Nebula.Caching.Redis.Interceptors;
 using StackExchange.Redis;
 
@@ -11,14 +12,17 @@ namespace Nebula.Caching.Redis.Extensions
     {
         public static IServiceCollection AddRedisChache(this IServiceCollection services)
         {
-            services.AddSingleton<ICacheManager, RedisCacheManager.RedisCacheManager>();
+            services.AddSingleton<ICacheManager>(serviceProvider =>
+            {
+                var database = serviceProvider.GetService<IDatabase>();
+                return new RedisCacheManager(database);
+            });
 
             services.ConfigureDynamicProxy(config =>
             {
-                //var cacheManager = services.BuildServiceProvider().GetService<ICacheManager>();
                 config
                     .Interceptors
-                    .AddTyped<RedisCacheInterceptor>(/*new object[] { cacheManager }*/);
+                    .AddTyped<RedisCacheInterceptor>();
             });
 
             services.AddSingleton<IDatabase>(serviceProvider =>

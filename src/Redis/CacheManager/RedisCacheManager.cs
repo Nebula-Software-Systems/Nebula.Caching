@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Nebula.Caching.Common.CacheManager;
 using StackExchange.Redis;
 
-namespace Nebula.Caching.Redis.RedisCacheManager
+namespace Nebula.Caching.Redis.CacheManager
 {
     public class RedisCacheManager : ICacheManager
     {

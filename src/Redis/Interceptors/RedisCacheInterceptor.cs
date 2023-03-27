@@ -3,7 +3,6 @@ using AspectCore.DynamicProxy;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.CacheManager;
 using Nebula.Caching.Redis.Attributes;
-using Nebula.Caching.Redis.RedisCacheManager;
 using StackExchange.Redis;
 
 namespace Nebula.Caching.Redis.Interceptors
@@ -32,10 +31,10 @@ namespace Nebula.Caching.Redis.Interceptors
                 //Cache does not exist
 
                 //execute method
-                await next(context);
+                await next(context).ConfigureAwait(false);
 
                 //cache executed method
-                CacheValue(context);
+                await CacheValue(context).ConfigureAwait(false);
             }
         }
 
@@ -46,7 +45,7 @@ namespace Nebula.Caching.Redis.Interceptors
             context.ReturnValue = redis.StringGet(key).ToString();
         }
 
-        private void CacheValue(AspectContext context)
+        private async Task CacheValue(AspectContext context)
         {
             var cache = 250;
 
@@ -57,10 +56,12 @@ namespace Nebula.Caching.Redis.Interceptors
                 cache = attribute.CacheDuration;
             }
 
-            var database = GetDatabase(context);
+            //var database = GetDatabase(context);
             string key = $"{context.ImplementationMethod.Name}";
-            database.StringSet(key, Convert.ToString(context.ReturnValue));
-            database.KeyExpire(key, TimeSpan.FromSeconds(cache));
+            //database.StringSet(key, Convert.ToString(context.ReturnValue));
+            //database.KeyExpire(key, TimeSpan.FromSeconds(cache));
+            var cacheManager = context.ServiceProvider.GetService<ICacheManager>();
+            await cacheManager.SetAsync(key, Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(cache));
         }
 
         private bool CacheExists(AspectContext context)
