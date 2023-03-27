@@ -1,17 +1,52 @@
+using System.Runtime.CompilerServices;
 using AspectCore.DynamicProxy;
 using Microsoft.Extensions.DependencyInjection;
+using Nebula.Caching.Common.CacheManager;
 using Nebula.Caching.Redis.Attributes;
+using Nebula.Caching.Redis.RedisCacheManager;
 using StackExchange.Redis;
 
 namespace Nebula.Caching.Redis.Interceptors
 {
     public class RedisCacheInterceptor : AbstractInterceptorAttribute
     {
-        public RedisCacheInterceptor()
+
+        //public ICacheManager CacheManager { get; set; }
+
+        public RedisCacheInterceptor(/*ICacheManager cacheManager*/)
         {
+            //CacheManager = cacheManager;
         }
 
         public async override Task Invoke(AspectContext context, AspectDelegate next)
+        {
+
+            //await CacheManager.SetAsync("key", "value", TimeSpan.FromSeconds(59));
+
+            if (CacheExists(context))
+            {
+                ReturnCachedValue(context);
+            }
+            else
+            {
+                //Cache does not exist
+
+                //execute method
+                await next(context);
+
+                //cache executed method
+                CacheValue(context);
+            }
+        }
+
+        private void ReturnCachedValue(AspectContext context)
+        {
+            var redis = GetDatabase(context);
+            string key = $"{context.ImplementationMethod.Name}";
+            context.ReturnValue = redis.StringGet(key).ToString();
+        }
+
+        private void CacheValue(AspectContext context)
         {
             var cache = 250;
 
@@ -22,11 +57,23 @@ namespace Nebula.Caching.Redis.Interceptors
                 cache = attribute.CacheDuration;
             }
 
-            var redis = context.ServiceProvider.GetService<IConnectionMultiplexer>();
-            var db = redis.GetDatabase();
-            await db.SetAddAsync("AttributeKey", $"New Key Value from Interceptor: {cache}");
-            await db.KeyExpireAsync("AttributeKey", TimeSpan.FromSeconds(cache));
-            await next(context);
+            var database = GetDatabase(context);
+            string key = $"{context.ImplementationMethod.Name}";
+            database.StringSet(key, Convert.ToString(context.ReturnValue));
+            database.KeyExpire(key, TimeSpan.FromSeconds(cache));
         }
+
+        private bool CacheExists(AspectContext context)
+        {
+            var database = GetDatabase(context);
+            string key = $"{context.ImplementationMethod.Name}";
+            return database.StringGet(key) != RedisValue.Null;
+        }
+
+        private IDatabase GetDatabase(AspectContext context)
+        {
+            return context.ServiceProvider.GetService<IDatabase>();
+        }
+
     }
 }
