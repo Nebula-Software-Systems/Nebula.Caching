@@ -3,6 +3,7 @@ using AspectCore.DynamicProxy;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.CacheManager;
 using Nebula.Caching.Redis.Attributes;
+
 using StackExchange.Redis;
 
 namespace Nebula.Caching.Redis.Interceptors
@@ -31,21 +32,21 @@ namespace Nebula.Caching.Redis.Interceptors
                 //Cache does not exist
 
                 //execute method
-                await next(context).ConfigureAwait(false);
+                await next(context);
 
                 //cache executed method
-                await CacheValue(context).ConfigureAwait(false);
+                CacheValue(context);
             }
         }
 
         private void ReturnCachedValue(AspectContext context)
         {
-            var redis = GetDatabase(context);
             string key = $"{context.ImplementationMethod.Name}";
-            context.ReturnValue = redis.StringGet(key).ToString();
+            var cacheManager = context.ServiceProvider.GetService<ICacheManager>();
+            context.ReturnValue = cacheManager.Get(key);
         }
 
-        private async Task CacheValue(AspectContext context)
+        private void CacheValue(AspectContext context)
         {
             var cache = 250;
 
@@ -56,12 +57,10 @@ namespace Nebula.Caching.Redis.Interceptors
                 cache = attribute.CacheDuration;
             }
 
-            //var database = GetDatabase(context);
+            var database = GetDatabase(context);
             string key = $"{context.ImplementationMethod.Name}";
-            //database.StringSet(key, Convert.ToString(context.ReturnValue));
-            //database.KeyExpire(key, TimeSpan.FromSeconds(cache));
-            var cacheManager = context.ServiceProvider.GetService<ICacheManager>();
-            await cacheManager.SetAsync(key, Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(cache));
+            database.StringSet(key, Convert.ToString(context.ReturnValue));
+            database.KeyExpire(key, TimeSpan.FromSeconds(cache));
         }
 
         private bool CacheExists(AspectContext context)
