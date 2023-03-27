@@ -19,7 +19,7 @@ namespace Nebula.Caching.Redis.CacheManager
 
         public bool CacheExists(string key)
         {
-            return Get(key) != RedisValue.Null;
+            return _redis.StringGet(key) != RedisValue.Null;
         }
 
         public string Get(string key)
@@ -27,7 +27,7 @@ namespace Nebula.Caching.Redis.CacheManager
             return _redis.StringGet(key).ToString();
         }
 
-        public void SetAsync(string key, string value, TimeSpan expiration)
+        public void Set(string key, string value, TimeSpan expiration)
         {
             _redis.SetAdd(new RedisKey(key), value);
             _redis.KeyExpire(new RedisKey(key), expiration);

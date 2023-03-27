@@ -42,7 +42,7 @@ namespace Nebula.Caching.Redis.Interceptors
         private void ReturnCachedValue(AspectContext context)
         {
             string key = $"{context.ImplementationMethod.Name}";
-            var cacheManager = context.ServiceProvider.GetService<ICacheManager>();
+            ICacheManager? cacheManager = context.ServiceProvider.GetService<ICacheManager>();
             context.ReturnValue = cacheManager.Get(key);
         }
 
@@ -65,9 +65,9 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private bool CacheExists(AspectContext context)
         {
-            var database = GetDatabase(context);
             string key = $"{context.ImplementationMethod.Name}";
-            return database.StringGet(key) != RedisValue.Null;
+            ICacheManager? cacheManager = context.ServiceProvider.GetService<ICacheManager>();
+            return cacheManager.CacheExists(key);
         }
 
         private IDatabase GetDatabase(AspectContext context)

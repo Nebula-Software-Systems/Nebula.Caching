@@ -8,7 +8,7 @@ namespace Nebula.Caching.Common.CacheManager
 {
     public interface ICacheManager
     {
-        void SetAsync(string key, string value, TimeSpan expiration);
+        void Set(string key, string value, TimeSpan expiration);
         string Get(string key);
         bool CacheExists(string key);
     }
