@@ -1,5 +1,8 @@
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using AspectCore.DynamicProxy;
+using AspectCore.Extensions.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.CacheManager;
 using Nebula.Caching.Redis.Attributes;
@@ -41,9 +44,8 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private void ReturnCachedValue(AspectContext context)
         {
-            string key = $"{context.ImplementationMethod.Name}";
             ICacheManager? cacheManager = context.ServiceProvider.GetService<ICacheManager>();
-            context.ReturnValue = cacheManager.Get(key);
+            context.ReturnValue = cacheManager.Get(GenerateKey(context));
         }
 
         private void CacheValue(AspectContext context)
@@ -57,17 +59,26 @@ namespace Nebula.Caching.Redis.Interceptors
                 cache = attribute.CacheDuration;
             }
 
-            string key = $"{context.ImplementationMethod.Name}";
             ICacheManager? cacheManager = context.ServiceProvider.GetService<ICacheManager>();
-            cacheManager.Set(key, Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(cache));
+            cacheManager.Set(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(cache));
         }
 
         private bool CacheExists(AspectContext context)
         {
-            string key = $"{context.ImplementationMethod.Name}";
             ICacheManager? cacheManager = context.ServiceProvider.GetService<ICacheManager>();
-            return cacheManager.CacheExists(key);
+            return cacheManager.CacheExists(GenerateKey(context));
         }
 
+        private string GenerateKey(AspectContext context)
+        {
+            var methodParams = context.Parameters.Select((object obj) =>
+            {
+                return obj.ToString();
+            }).ToArray();
+
+            string methodParamsAggregated = string.Join(":", methodParams);
+
+            return $"{context.ImplementationMethod.DeclaringType.FullName}:{context.ImplementationMethod.Name}:{methodParamsAggregated}";
+        }
     }
 }
