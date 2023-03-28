@@ -29,8 +29,8 @@ namespace Nebula.Caching.Redis.CacheManager
 
         public void Set(string key, string value, TimeSpan expiration)
         {
-            _redis.SetAdd(new RedisKey(key), value);
-            _redis.KeyExpire(new RedisKey(key), expiration);
+            _redis.StringSet(key, value);
+            _redis.KeyExpire(key, expiration);
         }
     }
 }
