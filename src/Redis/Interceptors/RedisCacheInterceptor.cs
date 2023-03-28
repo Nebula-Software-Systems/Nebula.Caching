@@ -13,15 +13,15 @@ namespace Nebula.Caching.Redis.Interceptors
 {
     public class RedisCacheInterceptor : AbstractInterceptorAttribute
     {
-        private ICacheManager cacheManager { get; set; }
+        private ICacheManager _cacheManager { get; set; }
 
-        public RedisCacheInterceptor()
+        public RedisCacheInterceptor(ICacheManager cacheManager)
         {
+            _cacheManager = cacheManager;
         }
 
         public async override Task Invoke(AspectContext context, AspectDelegate next)
         {
-            InitDependencies(context);
             if (CacheExists(context))
             {
                 ReturnCachedValue(context);
@@ -33,14 +33,9 @@ namespace Nebula.Caching.Redis.Interceptors
             }
         }
 
-        private void InitDependencies(AspectContext context)
-        {
-            cacheManager = context.ServiceProvider.GetService<ICacheManager>();
-        }
-
         private void ReturnCachedValue(AspectContext context)
         {
-            context.ReturnValue = cacheManager.Get(GenerateKey(context));
+            context.ReturnValue = _cacheManager.Get(GenerateKey(context));
         }
 
         private void CacheValue(AspectContext context)
@@ -54,12 +49,12 @@ namespace Nebula.Caching.Redis.Interceptors
                 cache = attribute.CacheDuration;
             }
 
-            cacheManager.Set(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(cache));
+            _cacheManager.Set(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(cache));
         }
 
         private bool CacheExists(AspectContext context)
         {
-            return cacheManager.CacheExists(GenerateKey(context));
+            return _cacheManager.CacheExists(GenerateKey(context));
         }
 
         private string GenerateKey(AspectContext context)
