@@ -5,8 +5,9 @@ using AspectCore.DynamicProxy;
 using AspectCore.Extensions.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.CacheManager;
+using Nebula.Caching.Common.KeyManager;
 using Nebula.Caching.Redis.Attributes;
-
+using Nebula.Caching.src.Common.Utils;
 using StackExchange.Redis;
 
 namespace Nebula.Caching.Redis.Interceptors
@@ -14,10 +15,14 @@ namespace Nebula.Caching.Redis.Interceptors
     public class RedisCacheInterceptor : AbstractInterceptorAttribute
     {
         private ICacheManager _cacheManager { get; set; }
+        private IKeyManager _keyManager { get; set; }
+        private IContextUtils _utils { get; set; }
 
-        public RedisCacheInterceptor(ICacheManager cacheManager)
+        public RedisCacheInterceptor(ICacheManager cacheManager, IKeyManager keyManager, IContextUtils utils)
         {
             _cacheManager = cacheManager;
+            _keyManager = keyManager;
+            _utils = utils;
         }
 
         public async override Task Invoke(AspectContext context, AspectDelegate next)
@@ -40,16 +45,7 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private void CacheValue(AspectContext context)
         {
-            var cache = 250;
-
-            var stuff = context.ServiceMethod.GetCustomAttributes(true).FirstOrDefault(x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType()));
-
-            if (stuff is RedisCacheAttribute attribute)
-            {
-                cache = attribute.CacheDuration;
-            }
-
-            _cacheManager.Set(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(cache));
+            _cacheManager.Set(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(_utils.GetCacheDuration(context)));
         }
 
         private bool CacheExists(AspectContext context)
@@ -59,14 +55,7 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private string GenerateKey(AspectContext context)
         {
-            var methodParams = context.Parameters.Select((object obj) =>
-            {
-                return obj.ToString();
-            }).ToArray();
-
-            string methodParamsAggregated = string.Join(":", methodParams);
-
-            return $"{context.ImplementationMethod.DeclaringType.FullName}:{context.ImplementationMethod.Name}:{methodParamsAggregated}";
+            return _keyManager.GenerateKey(_utils.GetExecutedMethodInfo(context), _utils.GetMethodParameters(context));
         }
     }
 }
