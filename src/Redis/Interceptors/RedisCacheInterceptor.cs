@@ -13,38 +13,33 @@ namespace Nebula.Caching.Redis.Interceptors
 {
     public class RedisCacheInterceptor : AbstractInterceptorAttribute
     {
+        private ICacheManager cacheManager { get; set; }
 
-        //public ICacheManager CacheManager { get; set; }
-
-        public RedisCacheInterceptor(/*ICacheManager cacheManager*/)
+        public RedisCacheInterceptor()
         {
-            //CacheManager = cacheManager;
         }
 
         public async override Task Invoke(AspectContext context, AspectDelegate next)
         {
-
-            //await CacheManager.SetAsync("key", "value", TimeSpan.FromSeconds(59));
-
+            InitDependencies(context);
             if (CacheExists(context))
             {
                 ReturnCachedValue(context);
             }
             else
             {
-                //Cache does not exist
-
-                //execute method
                 await next(context);
-
-                //cache executed method
                 CacheValue(context);
             }
         }
 
+        private void InitDependencies(AspectContext context)
+        {
+            cacheManager = context.ServiceProvider.GetService<ICacheManager>();
+        }
+
         private void ReturnCachedValue(AspectContext context)
         {
-            ICacheManager? cacheManager = context.ServiceProvider.GetService<ICacheManager>();
             context.ReturnValue = cacheManager.Get(GenerateKey(context));
         }
 
@@ -59,13 +54,11 @@ namespace Nebula.Caching.Redis.Interceptors
                 cache = attribute.CacheDuration;
             }
 
-            ICacheManager? cacheManager = context.ServiceProvider.GetService<ICacheManager>();
             cacheManager.Set(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(cache));
         }
 
         private bool CacheExists(AspectContext context)
         {
-            ICacheManager? cacheManager = context.ServiceProvider.GetService<ICacheManager>();
             return cacheManager.CacheExists(GenerateKey(context));
         }
 
