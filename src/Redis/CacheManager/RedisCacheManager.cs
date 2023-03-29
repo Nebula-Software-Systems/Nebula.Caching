@@ -32,5 +32,21 @@ namespace Nebula.Caching.Redis.CacheManager
             _redis.StringSet(key, value);
             _redis.KeyExpire(key, expiration);
         }
+
+        public async Task<bool> CacheExistsAsync(string key)
+        {
+            return (await _redis.StringGetAsync(key)) != RedisValue.Null;
+        }
+
+        public async Task<string> GetAsync(string key)
+        {
+            return (await _redis.StringGetAsync(key)).ToString();
+        }
+
+        public async Task SetAsync(string key, string value, TimeSpan expiration)
+        {
+            await _redis.StringSetAsync(key, value);
+            await _redis.KeyExpireAsync(key, expiration);
+        }
     }
 }

@@ -11,5 +11,8 @@ namespace Nebula.Caching.Common.CacheManager
         void Set(string key, string value, TimeSpan expiration);
         string Get(string key);
         bool CacheExists(string key);
+        Task SetAsync(string key, string value, TimeSpan expiration);
+        Task<string> GetAsync(string key);
+        Task<bool> CacheExistsAsync(string key);
     }
 }

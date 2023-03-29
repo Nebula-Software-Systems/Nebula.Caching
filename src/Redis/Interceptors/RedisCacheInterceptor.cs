@@ -27,30 +27,30 @@ namespace Nebula.Caching.Redis.Interceptors
 
         public async override Task Invoke(AspectContext context, AspectDelegate next)
         {
-            if (CacheExists(context))
+            if (await CacheExistsAsync(context))
             {
-                ReturnCachedValue(context);
+                await ReturnCachedValueAsync(context);
             }
             else
             {
                 await next(context);
-                CacheValue(context);
+                await CacheValueAsync(context);
             }
         }
 
-        private void ReturnCachedValue(AspectContext context)
+        private async Task ReturnCachedValueAsync(AspectContext context)
         {
-            context.ReturnValue = _cacheManager.Get(GenerateKey(context));
+            context.ReturnValue = await _cacheManager.GetAsync(GenerateKey(context));
         }
 
-        private void CacheValue(AspectContext context)
+        private async Task CacheValueAsync(AspectContext context)
         {
-            _cacheManager.Set(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(_utils.GetCacheDuration(context)));
+            await _cacheManager.SetAsync(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(_utils.GetCacheDuration(context)));
         }
 
-        private bool CacheExists(AspectContext context)
+        private async Task<bool> CacheExistsAsync(AspectContext context)
         {
-            return _cacheManager.CacheExists(GenerateKey(context));
+            return await _cacheManager.CacheExistsAsync(GenerateKey(context));
         }
 
         private string GenerateKey(AspectContext context)
