@@ -21,16 +21,9 @@ namespace Nebula.Caching.src.Common.Utils
 
         public int GetCacheDuration(AspectContext context)
         {
-            var cacheDuration = 30;
-
             var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true).FirstOrDefault(x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType()));
-
-            if (executedMethodAttribute is RedisCacheAttribute attribute)
-            {
-                cacheDuration = attribute.CacheDuration;
-            }
-
-            return cacheDuration;
+            var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
+            return castedExecutedMethodAttribute.CacheDuration;
         }
 
         public MethodInfo GetExecutedMethodInfo(AspectContext context)

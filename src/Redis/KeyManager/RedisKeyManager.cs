@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Nebula.Caching.Common.Constants;
 using Nebula.Caching.Common.KeyManager;
 
 namespace Nebula.Caching.Redis.KeyManager
@@ -17,8 +18,8 @@ namespace Nebula.Caching.Redis.KeyManager
 
         public string GenerateKey(MethodInfo methodInfo, string[] parameters)
         {
-            string methodParamsAggregated = string.Join(":", parameters);
-            return $"{methodInfo.DeclaringType.FullName}.{methodInfo.Name}:{methodParamsAggregated}";
+            string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
+            return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{KeyConstants.MethodAndParametersSeparator}{methodParamsAggregated}";
         }
     }
 }
