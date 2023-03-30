@@ -7,7 +7,7 @@ using AspectCore.DynamicProxy;
 using Nebula.Caching.Common.Attributes;
 using Nebula.Caching.Redis.Attributes;
 
-namespace Nebula.Caching.src.Common.Utils
+namespace Nebula.Caching.Common.Utils
 {
     public interface IContextUtils
     {
