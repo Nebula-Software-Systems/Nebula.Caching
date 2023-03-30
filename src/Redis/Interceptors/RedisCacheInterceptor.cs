@@ -56,12 +56,23 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private async Task ReturnCachedValueAsync(AspectContext context)
         {
-            context.ReturnValue = await _cacheManager.GetAsync(GenerateKey(context)).ConfigureAwait(false);
+            var value = await _cacheManager.GetAsync(GenerateKey(context)).ConfigureAwait(false);
+            context.ReturnValue = context.IsAsync() ?
+                                    Task.FromResult(value)
+                                    :
+                                    value;
         }
 
         private async Task CacheValueAsync(AspectContext context)
         {
-            await _cacheManager.SetAsync(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(_utils.GetCacheDuration<RedisCacheAttribute>(context))).ConfigureAwait(false);
+            string value = "";
+
+            value = context.IsAsync() ?
+                                        (await context.UnwrapAsyncReturnValue<string>().ConfigureAwait(false))
+                                        :
+                                         Convert.ToString(context.ReturnValue);
+
+            await _cacheManager.SetAsync(GenerateKey(context), value, TimeSpan.FromSeconds(_utils.GetCacheDuration<RedisCacheAttribute>(context))).ConfigureAwait(false);
         }
 
         private async Task<bool> CacheExistsAsync(AspectContext context)
