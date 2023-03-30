@@ -27,8 +27,8 @@ namespace Nebula.Caching.Redis.Interceptors
 
         public async override Task Invoke(AspectContext context, AspectDelegate next)
         {
-            if (ExecutedMethodHasRedisCacheAttribute(context)) await ExecuteMethodThatHasRedisCacheAttribute(context, next);
-            else await ContinueExecutionForNonCacheableMethod(context, next);
+            if (ExecutedMethodHasRedisCacheAttribute(context)) await ExecuteMethodThatHasRedisCacheAttribute(context, next).ConfigureAwait(false);
+            else await ContinueExecutionForNonCacheableMethod(context, next).ConfigureAwait(false);
         }
 
         private bool ExecutedMethodHasRedisCacheAttribute(AspectContext context)
@@ -39,35 +39,35 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private async Task ExecuteMethodThatHasRedisCacheAttribute(AspectContext context, AspectDelegate next)
         {
-            if (await CacheExistsAsync(context))
+            if (await CacheExistsAsync(context).ConfigureAwait(false))
             {
-                await ReturnCachedValueAsync(context);
+                await ReturnCachedValueAsync(context).ConfigureAwait(false);
             }
             else
             {
-                await next(context);
-                await CacheValueAsync(context);
+                await next(context).ConfigureAwait(false);
+                await CacheValueAsync(context).ConfigureAwait(false);
             }
         }
 
         private async Task ContinueExecutionForNonCacheableMethod(AspectContext context, AspectDelegate next)
         {
-            await next(context);
+            await next(context).ConfigureAwait(false);
         }
 
         private async Task ReturnCachedValueAsync(AspectContext context)
         {
-            context.ReturnValue = await _cacheManager.GetAsync(GenerateKey(context));
+            context.ReturnValue = await _cacheManager.GetAsync(GenerateKey(context)).ConfigureAwait(false);
         }
 
         private async Task CacheValueAsync(AspectContext context)
         {
-            await _cacheManager.SetAsync(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(_utils.GetCacheDuration(context)));
+            await _cacheManager.SetAsync(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(_utils.GetCacheDuration(context))).ConfigureAwait(false);
         }
 
         private async Task<bool> CacheExistsAsync(AspectContext context)
         {
-            return await _cacheManager.CacheExistsAsync(GenerateKey(context));
+            return await _cacheManager.CacheExistsAsync(GenerateKey(context)).ConfigureAwait(false);
         }
 
         private string GenerateKey(AspectContext context)
