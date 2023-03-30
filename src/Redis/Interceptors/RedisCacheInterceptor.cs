@@ -27,6 +27,18 @@ namespace Nebula.Caching.Redis.Interceptors
 
         public async override Task Invoke(AspectContext context, AspectDelegate next)
         {
+            if (ExecutedMethodHasRedisCacheAttribute(context)) await ExecuteMethodThatHasRedisCacheAttribute(context, next);
+            else await ContinueExecutionForNonCacheableMethod(context, next);
+        }
+
+        private bool ExecutedMethodHasRedisCacheAttribute(AspectContext context)
+        {
+            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true).FirstOrDefault(x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType()));
+            return executedMethodAttribute is RedisCacheAttribute;
+        }
+
+        private async Task ExecuteMethodThatHasRedisCacheAttribute(AspectContext context, AspectDelegate next)
+        {
             if (await CacheExistsAsync(context))
             {
                 await ReturnCachedValueAsync(context);
@@ -36,6 +48,11 @@ namespace Nebula.Caching.Redis.Interceptors
                 await next(context);
                 await CacheValueAsync(context);
             }
+        }
+
+        private async Task ContinueExecutionForNonCacheableMethod(AspectContext context, AspectDelegate next)
+        {
+            await next(context);
         }
 
         private async Task ReturnCachedValueAsync(AspectContext context)
