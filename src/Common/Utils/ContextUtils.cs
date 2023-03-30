@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AspectCore.DynamicProxy;
+using Nebula.Caching.Common.Attributes;
 using Nebula.Caching.Common.KeyManager;
 using Nebula.Caching.Redis.Attributes;
 
@@ -19,10 +20,13 @@ namespace Nebula.Caching.src.Common.Utils
             _keyManager = keyManager;
         }
 
-        public int GetCacheDuration(AspectContext context)
+        public int GetCacheDuration<T>(AspectContext context) where T : BaseAttribute
         {
-            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true).FirstOrDefault(x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType()));
-            var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
+            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
+                                                            .FirstOrDefault(
+                                                                                x => typeof(T).IsAssignableFrom(x.GetType())
+                                                                            );
+            var castedExecutedMethodAttribute = executedMethodAttribute as T;
             return castedExecutedMethodAttribute.CacheDuration;
         }
 
@@ -39,5 +43,15 @@ namespace Nebula.Caching.src.Common.Utils
             }).ToArray();
             return methodParams;
         }
+
+        public bool IsAttributeOfType<T>(AspectContext context) where T : BaseAttribute
+        {
+            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
+                                                            .FirstOrDefault(
+                                                            x => typeof(T).IsAssignableFrom(x.GetType())
+                                                            );
+            return executedMethodAttribute is T;
+        }
+
     }
 }

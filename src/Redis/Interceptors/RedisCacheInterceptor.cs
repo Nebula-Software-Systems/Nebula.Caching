@@ -33,8 +33,7 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private bool ExecutedMethodHasRedisCacheAttribute(AspectContext context)
         {
-            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true).FirstOrDefault(x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType()));
-            return executedMethodAttribute is RedisCacheAttribute;
+            return _utils.IsAttributeOfType<RedisCacheAttribute>(context);
         }
 
         private async Task ExecuteMethodThatHasRedisCacheAttribute(AspectContext context, AspectDelegate next)
@@ -62,7 +61,7 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private async Task CacheValueAsync(AspectContext context)
         {
-            await _cacheManager.SetAsync(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(_utils.GetCacheDuration(context))).ConfigureAwait(false);
+            await _cacheManager.SetAsync(GenerateKey(context), Convert.ToString(context.ReturnValue), TimeSpan.FromSeconds(_utils.GetCacheDuration<RedisCacheAttribute>(context))).ConfigureAwait(false);
         }
 
         private async Task<bool> CacheExistsAsync(AspectContext context)

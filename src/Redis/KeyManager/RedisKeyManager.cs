@@ -13,7 +13,7 @@ namespace Nebula.Caching.Redis.KeyManager
 
         public RedisKeyManager()
         {
-
+            
         }
 
         public string GenerateKey(MethodInfo methodInfo, string[] parameters)
