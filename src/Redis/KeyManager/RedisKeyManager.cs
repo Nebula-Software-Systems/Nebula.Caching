@@ -13,13 +13,13 @@ namespace Nebula.Caching.Redis.KeyManager
 
         public RedisKeyManager()
         {
-            
+
         }
 
         public string GenerateKey(MethodInfo methodInfo, string[] parameters)
         {
             string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
-            return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{KeyConstants.MethodAndParametersSeparator}{methodParamsAggregated}";
+            return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
         }
     }
 }
