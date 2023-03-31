@@ -12,4 +12,10 @@
     <PackageReference Include="StackExchange.Redis" Version="2.6.96" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="tests\" />
+  </ItemGroup>
 </Project>
