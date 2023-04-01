@@ -1,6 +1,7 @@
 using AspectCore.Configuration;
 using AspectCore.DependencyInjection;
 using AspectCore.Extensions.DependencyInjection;
+using Common.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -17,20 +18,24 @@ namespace Nebula.Caching.Redis.Extensions
 {
     public static class Extensions
     {
-        public static IServiceCollection AddRedisChache(this IServiceCollection services, string configurationSection)
+        public static IServiceCollection AddRedisChache(this IServiceCollection services, Configurations configs)
         {
             services.AddSingleton<RedisOptions>(ctx =>
             {
                 var configuration = ctx.GetService<IConfiguration>();
-                var redisOptions = configuration.GetSection(configurationSection).Get<RedisOptions>();
-                redisOptions.ConfigurationRoot = configurationSection;
+                var redisOptions = configuration.GetSection(configs.ConfigurationSection).Get<RedisOptions>();
+                redisOptions.ConfigurationRoot = configs.ConfigurationSection;
                 return redisOptions;
             });
-            services.AddSingleton<IConnectionMultiplexer>(ctx =>
+
+            if (configs.UseVanillaConfiguration)
             {
-                var options = ctx.GetService<RedisOptions>();
-                return ConnectionMultiplexer.Connect(options.CacheServiceUrl);
-            });
+                services.AddSingleton<IConnectionMultiplexer>(ctx =>
+                {
+                    var options = ctx.GetService<RedisOptions>();
+                    return ConnectionMultiplexer.Connect(options.CacheServiceUrl);
+                });
+            }
 
             services.AddSingleton<ICacheManager>(serviceProvider =>
             {
