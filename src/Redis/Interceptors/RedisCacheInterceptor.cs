@@ -8,6 +8,7 @@ using Nebula.Caching.Common.CacheManager;
 using Nebula.Caching.Common.KeyManager;
 using Nebula.Caching.Common.Utils;
 using Nebula.Caching.Redis.Attributes;
+using Newtonsoft.Json;
 using StackExchange.Redis;
 
 namespace Nebula.Caching.Redis.Interceptors
@@ -57,20 +58,34 @@ namespace Nebula.Caching.Redis.Interceptors
         private async Task ReturnCachedValueAsync(AspectContext context)
         {
             var value = await _cacheManager.GetAsync(GenerateKey(context)).ConfigureAwait(false);
-            context.ReturnValue = context.IsAsync() ?
-                                    Task.FromResult(value)
-                                    :
-                                    value;
+
+            if (context.IsAsync())
+            {
+                var objectType = context.ServiceMethod.ReturnType;
+                var deserializedObject = JsonConvert.DeserializeObject(value, objectType);
+                context.ReturnValue = Task.FromResult(deserializedObject);
+            }
+            else
+            {
+                var objectType = context.ServiceMethod.ReturnType;
+                context.ReturnValue = JsonConvert.DeserializeObject(value, objectType);
+            }
         }
 
         private async Task CacheValueAsync(AspectContext context)
         {
             string value = "";
 
-            value = context.IsAsync() ?
-                                        (await context.UnwrapAsyncReturnValue<string>().ConfigureAwait(false))
-                                        :
-                                         Convert.ToString(context.ReturnValue);
+            if (context.IsAsync())
+            {
+                Type returnType = context.ReturnValue.GetType();
+                value = JsonConvert.SerializeObject(await context.UnwrapAsyncReturnValue().ConfigureAwait(false));
+            }
+            else
+            {
+                var returnValue = context.ReturnValue;
+                value = JsonConvert.SerializeObject(returnValue);
+            }
 
             await _cacheManager.SetAsync(GenerateKey(context), value, TimeSpan.FromSeconds(_utils.GetCacheDuration<RedisCacheAttribute>(context))).ConfigureAwait(false);
         }
