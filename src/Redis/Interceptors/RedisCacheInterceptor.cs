@@ -61,8 +61,8 @@ namespace Nebula.Caching.Redis.Interceptors
 
             if (context.IsAsync())
             {
-                var objectType = context.ServiceMethod.ReturnType;
-                var deserializedObject = JsonConvert.DeserializeObject(value, objectType);
+                dynamic objectType = context.ServiceMethod.ReturnType.GetGenericArguments().First();
+                dynamic deserializedObject = JsonConvert.DeserializeObject(value, objectType);
                 context.ReturnValue = Task.FromResult(deserializedObject);
             }
             else
