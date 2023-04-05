@@ -11,7 +11,7 @@ namespace Nebula.Caching.Common.Utils
 {
     public interface IContextUtils
     {
-        int GetCacheDuration<T>(AspectContext context) where T : BaseAttribute;
+        int GetCacheDuration<T>(string key, AspectContext context) where T : BaseAttribute;
         string[] GetMethodParameters(AspectContext context);
         MethodInfo GetExecutedMethodInfo(AspectContext context);
         bool IsAttributeOfType<T>(AspectContext context) where T : BaseAttribute;

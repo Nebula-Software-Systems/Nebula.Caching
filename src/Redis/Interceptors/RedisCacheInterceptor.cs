@@ -87,7 +87,7 @@ namespace Nebula.Caching.Redis.Interceptors
                 value = JsonConvert.SerializeObject(returnValue);
             }
 
-            await _cacheManager.SetAsync(GenerateKey(context), value, TimeSpan.FromSeconds(_utils.GetCacheDuration<RedisCacheAttribute>(context))).ConfigureAwait(false);
+            await _cacheManager.SetAsync(GenerateKey(context), value, TimeSpan.FromSeconds(_utils.GetCacheDuration<RedisCacheAttribute>(GenerateKey(context), context))).ConfigureAwait(false);
         }
 
         private async Task<bool> CacheExistsAsync(AspectContext context)
