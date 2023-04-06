@@ -8,6 +8,7 @@ using Common.CacheRepresentation.KeyValue;
 using Common.Settings;
 using Microsoft.Extensions.Configuration;
 using Nebula.Caching.Common.Attributes;
+using Nebula.Caching.Common.Constants;
 using Nebula.Caching.Common.KeyManager;
 using Nebula.Caching.Redis.Attributes;
 using Redis.Settings;
@@ -30,25 +31,10 @@ namespace Nebula.Caching.Common.Utils
 
         public int GetCacheDuration<T>(string key, AspectContext context) where T : BaseAttribute
         {
-            //var cacheDict = _configuration.GetSection(_baseOptions.ConfigurationRoot).Get<CacheKeyValuePairs>();
-            if (_baseOptions.CacheSettings != null)
-            {
-                var finalChangedKey = (key.Replace('.', '-')).Replace(":", "--");
-                var cacheExpiration = _baseOptions.CacheSettings.GetValueOrDefault(finalChangedKey);
-
-                if (cacheExpiration != null || cacheExpiration > TimeSpan.Zero)
-                {
-                    //value of cache expiration exists in the config files
-                    return (int)cacheExpiration.TotalSeconds;
-                }
-            }
-
-            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
-                                                            .FirstOrDefault(
-                                                                                x => typeof(T).IsAssignableFrom(x.GetType())
-                                                                            );
-            var castedExecutedMethodAttribute = executedMethodAttribute as T;
-            return castedExecutedMethodAttribute.CacheDuration;
+            return CacheConfigSectionExists() ?
+                                                RetrieveCacheExpirationFromConfig(key, context)
+                                                :
+                                                RetrieveCacheExpirationFromAttribute<T>(context);
         }
 
         public MethodInfo GetExecutedMethodInfo(AspectContext context)
@@ -72,6 +58,39 @@ namespace Nebula.Caching.Common.Utils
                                                             x => typeof(T).IsAssignableFrom(x.GetType())
                                                             );
             return executedMethodAttribute is T;
+        }
+
+        public bool CacheConfigSectionExists()
+        {
+            return _baseOptions.CacheSettings != null;
+        }
+
+        public int RetrieveCacheExpirationFromConfig(string key, AspectContext context)
+        {
+            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(key);
+            var cacheExpiration = _baseOptions.CacheSettings.GetValueOrDefault(convertedKey);
+
+            if (IsCacheExpirationValid(cacheExpiration))
+            {
+                return (int)cacheExpiration.TotalSeconds;
+            }
+
+            throw new InvalidOperationException($"Cache key {key} either doesn't exist on the configuration or if exist has an invalid value for its duration. Cache duration should be grater than zero.");
+        }
+
+        public int RetrieveCacheExpirationFromAttribute<T>(AspectContext context) where T : BaseAttribute
+        {
+            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
+                                                .FirstOrDefault(
+                                                                    x => typeof(T).IsAssignableFrom(x.GetType())
+                                                                );
+            var castedExecutedMethodAttribute = executedMethodAttribute as T;
+            return castedExecutedMethodAttribute.CacheDuration;
+        }
+
+        public bool IsCacheExpirationValid(TimeSpan cacheExpiration)
+        {
+            return cacheExpiration != null || cacheExpiration > TimeSpan.Zero;
         }
 
     }
