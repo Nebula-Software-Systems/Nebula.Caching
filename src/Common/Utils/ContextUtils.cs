@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AspectCore.DynamicProxy;
+using Common.CacheRepresentation.KeyValue;
+using Common.Settings;
 using Microsoft.Extensions.Configuration;
 using Nebula.Caching.Common.Attributes;
 using Nebula.Caching.Common.KeyManager;
@@ -17,20 +19,22 @@ namespace Nebula.Caching.Common.Utils
 
         private IKeyManager _keyManager;
         private IConfiguration _configuration;
+        private BaseOptions _baseOptions;
 
-        public ContextUtils(IKeyManager keyManager, IConfiguration configuration)
+        public ContextUtils(IKeyManager keyManager, IConfiguration configuration, BaseOptions baseOptions)
         {
             _keyManager = keyManager;
             _configuration = configuration;
+            _baseOptions = baseOptions;
         }
 
         public int GetCacheDuration<T>(string key, AspectContext context) where T : BaseAttribute
         {
-            var cacheDict = _configuration.GetSection("Redis").Get<CacheKeyValuePairs>();
-            if (cacheDict.CacheSettings != null)
+            //var cacheDict = _configuration.GetSection(_baseOptions.ConfigurationRoot).Get<CacheKeyValuePairs>();
+            if (_baseOptions.CacheSettings != null)
             {
                 var finalChangedKey = (key.Replace('.', '-')).Replace(":", "--");
-                var cacheExpiration = cacheDict.CacheSettings.GetValueOrDefault(finalChangedKey);
+                var cacheExpiration = _baseOptions.CacheSettings.GetValueOrDefault(finalChangedKey);
 
                 if (cacheExpiration != null || cacheExpiration > TimeSpan.Zero)
                 {
@@ -38,7 +42,6 @@ namespace Nebula.Caching.Common.Utils
                     return (int)cacheExpiration.TotalSeconds;
                 }
             }
-
 
             var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
                                                             .FirstOrDefault(

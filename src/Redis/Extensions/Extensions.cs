@@ -51,7 +51,8 @@ namespace Nebula.Caching.Redis.Extensions
             services.AddSingleton<IContextUtils>(serviceProvider =>
             {
                 var configuration = serviceProvider.GetService<IConfiguration>();
-                return new ContextUtils(new RedisKeyManager(), configuration);
+                var redisOptions = serviceProvider.GetService<RedisOptions>();
+                return new ContextUtils(new RedisKeyManager(), configuration, redisOptions);
             });
 
             services.AddSingleton<RedisCacheInterceptor>();
