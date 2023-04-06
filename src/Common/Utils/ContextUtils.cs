@@ -26,15 +26,17 @@ namespace Nebula.Caching.Common.Utils
 
         public int GetCacheDuration<T>(string key, AspectContext context) where T : BaseAttribute
         {
-
             var cacheDict = _configuration.GetSection("Redis").Get<CacheKeyValuePairs>();
-            var finalChangedKey = (key.Replace('.', '-')).Replace(":", "--");
-            var cacheExpiration = cacheDict.CacheSettings.GetValueOrDefault(finalChangedKey);
-
-            if (cacheExpiration != null || cacheExpiration > TimeSpan.Zero)
+            if (cacheDict.CacheSettings != null)
             {
-                //value of cache expiration exists in the config files
-                return (int)cacheExpiration.TotalSeconds;
+                var finalChangedKey = (key.Replace('.', '-')).Replace(":", "--");
+                var cacheExpiration = cacheDict.CacheSettings.GetValueOrDefault(finalChangedKey);
+
+                if (cacheExpiration != null || cacheExpiration > TimeSpan.Zero)
+                {
+                    //value of cache expiration exists in the config files
+                    return (int)cacheExpiration.TotalSeconds;
+                }
             }
 
 
