@@ -11,6 +11,10 @@ using Nebula.Caching.Common.Utils;
 using Nebula.Caching.Redis.CacheManager;
 using Nebula.Caching.Redis.Interceptors;
 using Nebula.Caching.Redis.KeyManager;
+using Redis.Extensions.InterceptorExtensions;
+using Redis.Extensions.ManagerExtensions;
+using Redis.Extensions.RedisExtensions;
+using Redis.Extensions.UtilsExceptions;
 using Redis.Settings;
 using StackExchange.Redis;
 
@@ -20,57 +24,11 @@ namespace Nebula.Caching.Redis.Extensions
     {
         public static IServiceCollection AddRedisChache(this IServiceCollection services, Configurations configs)
         {
-            services.AddSingleton<RedisOptions>(ctx =>
-            {
-                var configuration = ctx.GetService<IConfiguration>();
-                var redisOptions = configuration.GetSection(configs.ConfigurationSection).Get<RedisOptions>();
-                redisOptions.ConfigurationRoot = configs.ConfigurationSection;
-                return redisOptions;
-            });
-
-            if (configs.UseVanillaConfiguration)
-            {
-                services.AddSingleton<IConnectionMultiplexer>(ctx =>
-                {
-                    var options = ctx.GetService<RedisOptions>();
-                    return ConnectionMultiplexer.Connect(options.CacheServiceUrl);
-                });
-            }
-
-            services.AddScoped<ICacheManager>(serviceProvider =>
-            {
-                var database = serviceProvider.GetService<IDatabase>();
-                return new RedisCacheManager(database);
-            });
-
-            services.AddScoped<IKeyManager>(serviceProvider =>
-            {
-                return new RedisKeyManager();
-            });
-
-            services.AddScoped<IContextUtils>(serviceProvider =>
-            {
-                var configuration = serviceProvider.GetService<IConfiguration>();
-                var redisOptions = serviceProvider.GetService<RedisOptions>();
-                return new ContextUtils(new RedisKeyManager(), configuration, redisOptions);
-            });
-
-            services.AddSingleton<RedisCacheInterceptor>();
-
-            services.ConfigureDynamicProxy(config =>
-            {
-                config
-                    .Interceptors
-                    .AddServiced<RedisCacheInterceptor>();
-            });
-
-            services.AddSingleton<IDatabase>(serviceProvider =>
-            {
-                var redis = serviceProvider.GetService<IConnectionMultiplexer>();
-                return redis.GetDatabase();
-            });
-
-            return services;
+            return services
+                        .AddRedisInterceptor()
+                        .AddRedisExtensions(configs)
+                        .AddManagerExtensions()
+                        .AddUtilsExceptions();
         }
     }
 }
