@@ -37,18 +37,18 @@ namespace Nebula.Caching.Redis.Extensions
                 });
             }
 
-            services.AddSingleton<ICacheManager>(serviceProvider =>
+            services.AddScoped<ICacheManager>(serviceProvider =>
             {
                 var database = serviceProvider.GetService<IDatabase>();
                 return new RedisCacheManager(database);
             });
 
-            services.AddSingleton<IKeyManager>(serviceProvider =>
+            services.AddScoped<IKeyManager>(serviceProvider =>
             {
                 return new RedisKeyManager();
             });
 
-            services.AddSingleton<IContextUtils>(serviceProvider =>
+            services.AddScoped<IContextUtils>(serviceProvider =>
             {
                 var configuration = serviceProvider.GetService<IConfiguration>();
                 var redisOptions = serviceProvider.GetService<RedisOptions>();

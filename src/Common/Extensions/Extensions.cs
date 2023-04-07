@@ -7,8 +7,7 @@ namespace Nebula.Caching.Common.Extensions
     {
         public static IHostBuilder UseNebulaCaching(this IHostBuilder builderHost)
         {
-            builderHost.UseDynamicProxy();
-            return builderHost;
+            return builderHost.UseDynamicProxy();
         }
     }
 }
