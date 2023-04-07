@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using AspectCore.DynamicProxy;
+using AspectCore.DynamicProxy.Parameters;
 using AspectCore.Extensions.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.CacheManager;
@@ -87,7 +88,10 @@ namespace Nebula.Caching.Redis.Interceptors
                 value = JsonConvert.SerializeObject(returnValue);
             }
 
-            await _cacheManager.SetAsync(GenerateKey(context), value, TimeSpan.FromSeconds(_utils.GetCacheDuration<RedisCacheAttribute>(GenerateKey(context), context))).ConfigureAwait(false);
+            var key = GenerateKey(context);
+            var expiration = TimeSpan.FromSeconds(_utils.GetCacheDuration<RedisCacheAttribute>(GenerateKey(context), context));
+
+            await _cacheManager.SetAsync(key, value, expiration).ConfigureAwait(false);
         }
 
         private async Task<bool> CacheExistsAsync(AspectContext context)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AspectCore.DynamicProxy;
+using AspectCore.DynamicProxy.Parameters;
 
 namespace Nebula.Caching.Common.KeyManager
 {
@@ -10,5 +12,6 @@ namespace Nebula.Caching.Common.KeyManager
     {
         string GenerateKey(MethodInfo methodInfo, string[] parameters);
         string ConvertCacheKeyToConfigKey(string key);
+        string CreateGenericCacheKey(AspectContext context);
     }
 }

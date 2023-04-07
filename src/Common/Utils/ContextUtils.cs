@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AspectCore.DynamicProxy;
+using AspectCore.DynamicProxy.Parameters;
 using Common.CacheRepresentation.KeyValue;
 using Common.Settings;
 using Microsoft.Extensions.Configuration;
@@ -67,7 +68,7 @@ namespace Nebula.Caching.Common.Utils
 
         public int RetrieveCacheExpirationFromConfig(string key, AspectContext context)
         {
-            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(key);
+            var convertedKey = _keyManager.CreateGenericCacheKey(context);
             var cacheExpiration = _baseOptions.CacheSettings.GetValueOrDefault(convertedKey);
 
             if (IsCacheExpirationValid(cacheExpiration))
