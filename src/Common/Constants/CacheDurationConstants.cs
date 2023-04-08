@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Nebula.Caching.Common.Constants
 {
-    public class CacheDurationConstants
+    public static class CacheDurationConstants
     {
-        public const int DefaultCacheDurationInSeconds = 30;
+        public static int DefaultCacheDurationInSeconds = 30;
     }
 }
