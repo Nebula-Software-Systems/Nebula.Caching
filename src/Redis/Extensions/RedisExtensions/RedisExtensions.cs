@@ -23,13 +23,31 @@ namespace Redis.Extensions.RedisExtensions
                 return redisOptions;
             });
 
-            if (configs.UseVanillaConfiguration)
+            if (configs.ConfigurationFlavour == RedisConfigurationFlavour.Vanilla)
             {
                 services.AddSingleton<IConnectionMultiplexer>(ctx =>
                 {
                     var options = ctx.GetService<RedisOptions>();
-                    return ConnectionMultiplexer.Connect(options.CacheServiceUrl);
+                    return ConnectionMultiplexer.Connect(options.CacheServiceUrl, configs.Log);
                 });
+            }
+            else if (configs.ConfigurationFlavour == RedisConfigurationFlavour.Configured)
+            {
+                if (configs.Configuration != null)
+                {
+                    services.AddSingleton<IConnectionMultiplexer>(ctx =>
+                    {
+                        return ConnectionMultiplexer.Connect(configs.Configuration, configs.Log);
+                    });
+                }
+                else
+                {
+                    services.AddSingleton<IConnectionMultiplexer>(ctx =>
+                    {
+                        var options = ctx.GetService<RedisOptions>();
+                        return ConnectionMultiplexer.Connect(options.CacheServiceUrl, configs.Configure, configs.Log);
+                    });
+                }
             }
 
             services.AddSingleton<IDatabase>(serviceProvider =>
