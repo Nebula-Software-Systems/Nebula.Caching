@@ -19,3 +19,10 @@ jobs:
     - name: Build
       run: dotnet build src/ --no-restore
 
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test
+      run: dotnet test tests/ --no-build --verbosity normal
+
