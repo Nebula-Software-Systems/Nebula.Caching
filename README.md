@@ -21,7 +21,7 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 ## CI Status
 
-[![Build&Test](https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml/badge.svg)] (https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml/badge.svg)
+[![Build&Test](https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml/badge.svg)] (https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml)
 
 
 ## Benchmarks
