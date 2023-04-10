@@ -23,7 +23,7 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 | Branch                                                                       | Status                                                                                                                                                                   |
 | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [**Main**](https://github.com/Nebula-Software-Systems/Nebula.Caching/tree/main)               | [![DotNet Main](https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml/badge.svg)]([https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml])
+| [**Main**](https://github.com/Nebula-Software-Systems/Nebula.Caching/tree/main)               | [![DotNet Main](https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml/badge.svg)](https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml)
 
 ## Benchmarks
 
