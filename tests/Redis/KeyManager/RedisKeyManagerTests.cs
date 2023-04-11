@@ -69,7 +69,7 @@ namespace Nebula.Caching.tests.Redis.KeyManager
 
         [Theory]
         [MemberData(nameof(ValidGenericParamNames))]
-        public void Given_When_Then(string paramName, string expectedGenericConfigCacheParameter)
+        public void Given_AParameterName_When_GenericParameterForConfigIsNeeded_Then_ReturnGenericParamAppropriateForConfig(string paramName, string expectedGenericConfigCacheParameter)
         {
             //Arrange
             var redisKeyManager = new RedisKeyManager();
@@ -80,7 +80,6 @@ namespace Nebula.Caching.tests.Redis.KeyManager
             //Assert
             Assert.Equal(expectedGenericConfigCacheParameter, generatedGenericConfigCacheParameter);
         }
-
 
         //Unit test data
         public static IEnumerable<object[]> ExecutedMethodArguments
