@@ -32,26 +32,26 @@ namespace Nebula.Caching.tests.Redis.KeyManager
             Assert.Equal(expectedCacheKey, generatedCacheKey);
         }
 
-        // [Theory]
-        // [MemberData(nameof(ExecutedMethodArguments))]
-        // public void Given_AMethodExecutedWithRedisCacheAttribute_When_ArgumentsArePassed_Then_CacheKeyShouldContainArguments(string[] methodArguments)
-        // {
-        //     //Arrrange
-        //     var redisKeyManager = new RedisKeyManager();
-        //     var mockedMethodInfo = new Mock<MethodInfo>();
-        //     mockedMethodInfo.SetupGet(m => m.DeclaringType.FullName).Returns("my.full.name");
-        //     mockedMethodInfo.SetupGet(m => m.Name).Returns("myMethod");
-        //     var methodInfo = mockedMethodInfo.Object;
-        //     string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, methodArguments);
-        //     var expectedCacheKey = $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{KeyConstants.MethodAndParametersSeparator}{methodParamsAggregated}";
+        [Theory]
+        [MemberData(nameof(ExecutedMethodArguments))]
+        public void Given_AMethodExecutedWithRedisCacheAttribute_When_ArgumentsArePassed_Then_CacheKeyShouldContainArguments(string[] methodArguments)
+        {
+            //Arrrange
+            var redisKeyManager = new RedisKeyManager();
+            var mockedMethodInfo = new Mock<MethodInfo>();
+            mockedMethodInfo.SetupGet(m => m.DeclaringType.FullName).Returns("my.full.name");
+            mockedMethodInfo.SetupGet(m => m.Name).Returns("myMethod");
+            var methodInfo = mockedMethodInfo.Object;
+            string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, methodArguments);
+            var expectedCacheKey = $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{KeyConstants.MethodAndParametersSeparator}{methodParamsAggregated}";
 
-        //     //Act
-        //     var generatedCacheKey = redisKeyManager.GenerateKey(methodInfo, methodArguments);
+            //Act
+            var generatedCacheKey = redisKeyManager.GenerateKey(methodInfo, methodArguments);
 
-        //     //Assert
-        //     Assert.NotEmpty(generatedCacheKey);
-        //     Assert.Equal(expectedCacheKey, generatedCacheKey);
-        // }
+            //Assert
+            Assert.NotEmpty(generatedCacheKey);
+            Assert.Equal(expectedCacheKey, generatedCacheKey);
+        }
 
 
         //Unit test data
