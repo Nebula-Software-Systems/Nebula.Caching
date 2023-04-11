@@ -53,6 +53,19 @@ namespace Nebula.Caching.tests.Redis.KeyManager
             Assert.Equal(expectedCacheKey, generatedCacheKey);
         }
 
+        [Theory]
+        [MemberData(nameof(ValidCacheKeys))]
+        public void Given_ACacheKey_When_AConfigKeyTransformationIsNeeded_Then_PerformTransformationFromCacheKeyToConfigKey(string key, string expectedConfigKey)
+        {
+            //Arrange
+            var redisKeyManager = new RedisKeyManager();
+
+            //Act
+            var generatedConfigKey = redisKeyManager.ConvertCacheKeyToConfigKey(key);
+
+            //Assert
+            Assert.Equal(expectedConfigKey, generatedConfigKey);
+        }
 
         //Unit test data
         public static IEnumerable<object[]> ExecutedMethodArguments
@@ -69,6 +82,18 @@ namespace Nebula.Caching.tests.Redis.KeyManager
                             new object[] { values2 },
                             new object[] { values3 },
                             new object[] { values4 }
+                        };
+            }
+        }
+        public static IEnumerable<object[]> ValidCacheKeys
+        {
+            get
+            {
+                return new List<object[]>
+                        {
+                            new object[] {"full.path.to.method:method:param1:param2:param3:param4", "full-path-to-method--method--param1--param2--param3--param4"},
+                            new object[] {"a.happy.path.to.method:method", "a-happy-path-to-method--method"},
+                            new object[] {"path.to.amazing.method:method:param1", "path-to-amazing-method--method--param1"}
                         };
             }
         }
