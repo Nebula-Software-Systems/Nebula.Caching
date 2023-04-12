@@ -30,17 +30,17 @@ namespace Nebula.Caching.Redis.KeyManager
                     .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
         }
 
-        public string CreateGenericCacheKey(AspectContext context)
+        public string CreateGenericCacheKey(MethodInfo methodInfo, ParameterCollection parameters)
         {
             List<string> genericParamsList = new List<string>();
 
-            foreach (var param in context.GetParameters())
+            foreach (var param in parameters)
             {
                 var genericParam = GenerateGeneriConfigCacheParameter(param.Name);
                 genericParamsList.Add(genericParam);
             }
 
-            var key = GenerateKey(context.ImplementationMethod, genericParamsList.ToArray());
+            var key = GenerateKey(methodInfo, genericParamsList.ToArray());
             return ConvertCacheKeyToConfigKey(key);
         }
 

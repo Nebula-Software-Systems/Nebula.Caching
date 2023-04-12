@@ -68,7 +68,7 @@ namespace Nebula.Caching.Common.Utils
 
         public int RetrieveCacheExpirationFromConfig(string key, AspectContext context)
         {
-            var convertedKey = _keyManager.CreateGenericCacheKey(context);
+            var convertedKey = _keyManager.CreateGenericCacheKey(context.ImplementationMethod, context.GetParameters());
             var cacheExpiration = _baseOptions.CacheSettings.GetValueOrDefault(convertedKey);
 
             if (IsCacheExpirationValid(cacheExpiration))
