@@ -68,7 +68,7 @@ namespace Nebula.Caching.Common.Utils
 
         public int RetrieveCacheExpirationFromConfig(string key, AspectContext context)
         {
-            var convertedKey = _keyManager.CreateGenericCacheKey(context.ImplementationMethod, context.GetParameters());
+            var convertedKey = _keyManager.GenerateKey(context.ImplementationMethod, GenerateParamsFromParamCollection(context.GetParameters()));
             var cacheExpiration = _baseOptions.CacheSettings.GetValueOrDefault(convertedKey);
 
             if (IsCacheExpirationValid(cacheExpiration))
@@ -92,6 +92,25 @@ namespace Nebula.Caching.Common.Utils
         public bool IsCacheExpirationValid(TimeSpan cacheExpiration)
         {
             return cacheExpiration != null || cacheExpiration > TimeSpan.Zero;
+        }
+
+        public string[] GenerateParamsFromParamCollection(ParameterCollection parameters)
+        {
+            List<string> genericParamsList = new List<string>();
+
+            foreach (var param in parameters)
+            {
+                var genericParam = GenerateGeneriConfigCacheParameter(param.Name);
+                genericParamsList.Add(genericParam);
+            }
+
+            return genericParamsList.ToArray();
+
+        }
+
+        public string GenerateGeneriConfigCacheParameter(string parameter)
+        {
+            return $"{{{parameter}}}";
         }
 
     }

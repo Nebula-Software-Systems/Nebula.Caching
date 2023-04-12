@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AspectCore.DynamicProxy;
+using AspectCore.DynamicProxy.Parameters;
 using Moq;
 using Nebula.Caching.Common.Constants;
 using Nebula.Caching.Redis.KeyManager;
@@ -39,7 +41,7 @@ namespace Nebula.Caching.tests.Redis.KeyManager
             //Arrrange
             var redisKeyManager = new RedisKeyManager();
             var mockedMethodInfo = new Mock<MethodInfo>();
-            mockedMethodInfo.SetupGet(m => m.DeclaringType.FullName).Returns("my.full.name");
+            mockedMethodInfo.SetupGet(expression: m => m.DeclaringType.FullName).Returns("my.full.name");
             mockedMethodInfo.SetupGet(m => m.Name).Returns("myMethod");
             var methodInfo = mockedMethodInfo.Object;
             string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, methodArguments);
@@ -65,20 +67,6 @@ namespace Nebula.Caching.tests.Redis.KeyManager
 
             //Assert
             Assert.Equal(expectedConfigKey, generatedConfigKey);
-        }
-
-        [Theory]
-        [MemberData(nameof(ValidGenericParamNames))]
-        public void Given_AParameterName_When_GenericParameterForConfigIsNeeded_Then_ReturnGenericParamAppropriateForConfig(string paramName, string expectedGenericConfigCacheParameter)
-        {
-            //Arrange
-            var redisKeyManager = new RedisKeyManager();
-
-            //Act
-            var generatedGenericConfigCacheParameter = redisKeyManager.GenerateGeneriConfigCacheParameter(paramName);
-
-            //Assert
-            Assert.Equal(expectedGenericConfigCacheParameter, generatedGenericConfigCacheParameter);
         }
 
         //Unit test data
@@ -108,18 +96,6 @@ namespace Nebula.Caching.tests.Redis.KeyManager
                             new object[] {"full.path.to.method:method:param1:param2:param3:param4", "full-path-to-method--method--param1--param2--param3--param4"},
                             new object[] {"a.happy.path.to.method:method", "a-happy-path-to-method--method"},
                             new object[] {"path.to.amazing.method:method:param1", "path-to-amazing-method--method--param1"}
-                        };
-            }
-        }
-        public static IEnumerable<object[]> ValidGenericParamNames
-        {
-            get
-            {
-                return new List<object[]>
-                        {
-                            new object[] {"paramName1", "{paramName1}"},
-                            new object[] {"paramName2", "{paramName2}"},
-                            new object[] {"aVeryLongParamNameWithNoMeaning", "{aVeryLongParamNameWithNoMeaning}"}
                         };
             }
         }

@@ -12,6 +12,5 @@ namespace Nebula.Caching.Common.KeyManager
     {
         string GenerateKey(MethodInfo methodInfo, string[] parameters);
         string ConvertCacheKeyToConfigKey(string key);
-        string CreateGenericCacheKey(MethodInfo methodInfo, ParameterCollection parameters);
     }
 }
