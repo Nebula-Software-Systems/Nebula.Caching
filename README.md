@@ -31,4 +31,11 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 ## Contributing
 
+This project welcomes and appreciates any contributions made.
+
+There are several ways you can contribute, namely:
+- Report any bug found.
+- Suggest some features or improvements.
+- Creating pull requests.
+
 ## License
