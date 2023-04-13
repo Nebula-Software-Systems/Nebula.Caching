@@ -39,3 +39,7 @@ There are several ways you can contribute, namely:
 - Creating pull requests.
 
 ## License
+
+Nebula.Caching is a free and open-source software licensed under the MIT License.
+
+See [LICENSE](LICENSE) for more details.
