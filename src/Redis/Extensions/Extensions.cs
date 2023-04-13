@@ -14,7 +14,7 @@ using Nebula.Caching.Redis.KeyManager;
 using Redis.Extensions.InterceptorExtensions;
 using Redis.Extensions.ManagerExtensions;
 using Redis.Extensions.RedisExtensions;
-using Redis.Extensions.UtilsExceptions;
+using Redis.Extensions.UtilsExtensions;
 using Redis.Settings;
 using StackExchange.Redis;
 
@@ -28,7 +28,7 @@ namespace Nebula.Caching.Redis.Extensions
                         .AddRedisInterceptor()
                         .AddRedisExtensions(configs)
                         .AddManagerExtensions()
-                        .AddUtilsExceptions();
+                        .AddUtilsExtensions();
         }
     }
 }

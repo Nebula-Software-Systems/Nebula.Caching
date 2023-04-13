@@ -8,11 +8,11 @@ using Nebula.Caching.Common.Utils;
 using Nebula.Caching.Redis.KeyManager;
 using Redis.Settings;
 
-namespace Redis.Extensions.UtilsExceptions
+namespace Redis.Extensions.UtilsExtensions
 {
-    public static class UtilsExceptions
+    public static class UtilsExtensions
     {
-        public static IServiceCollection AddUtilsExceptions(this IServiceCollection services)
+        public static IServiceCollection AddUtilsExtensions(this IServiceCollection services)
         {
             services.AddScoped<IContextUtils>(serviceProvider =>
             {
