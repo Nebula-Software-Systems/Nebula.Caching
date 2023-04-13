@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Nebula.Caching.Common.Constants;
@@ -8,6 +9,7 @@ using StackExchange.Redis;
 
 namespace Common.Settings
 {
+    [ExcludeFromCodeCoverage]
     public class Configurations
     {
         public string ConfigurationSection { get; set; }
