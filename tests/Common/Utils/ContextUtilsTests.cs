@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Moq;
 using Nebula.Caching.Common.KeyManager;
 using Nebula.Caching.Common.Utils;
 using Nebula.Caching.Redis.KeyManager;
+using Redis.Settings;
 using Xunit;
 
 namespace Nebula.Caching.tests.Common.Utils
@@ -72,6 +74,34 @@ namespace Nebula.Caching.tests.Common.Utils
             Assert.False(isExpirationValid);
         }
 
+        [Fact]
+        public void Given_ARequestToCheckforCacheConfigSection_When_CacheConfigSectionExists_Then_ReturnTrue()
+        {
+            //Arrange
+            var baseOptions = new RedisOptions();
+            baseOptions.CacheSettings = new ConcurrentDictionary<string, TimeSpan>();
+            var contextUtils = new ContextUtils(It.IsAny<IKeyManager>(), It.IsAny<IConfiguration>(), baseOptions);
+
+            //Act
+            var cacheConfigSectionExists = contextUtils.CacheConfigSectionExists();
+
+            //Assert
+            Assert.True(cacheConfigSectionExists);
+        }
+
+        [Fact]
+        public void Given_ARequestToCheckforCacheConfigSection_When_CacheConfigSectionDoesNotExist_Then_ReturnFalse()
+        {
+            //Arrange
+            var baseOptions = new RedisOptions();
+            var contextUtils = new ContextUtils(It.IsAny<IKeyManager>(), It.IsAny<IConfiguration>(), baseOptions);
+
+            //Act
+            var cacheConfigSectionExists = contextUtils.CacheConfigSectionExists();
+
+            //Assert
+            Assert.False(cacheConfigSectionExists);
+        }
 
         //Unit test data
         public static IEnumerable<object[]> ValidGenericParamNames
