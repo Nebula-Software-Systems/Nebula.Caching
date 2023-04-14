@@ -30,6 +30,49 @@ namespace Nebula.Caching.tests.Common.Utils
         }
 
 
+        [Fact]
+        public void Given_ACacheExpirationValue_When_CacheExpirationIsValid_Then_ReturnTrue()
+        {
+            //Arrange
+            var contextUtils = new ContextUtils(It.IsAny<IKeyManager>(), It.IsAny<IConfiguration>(), It.IsAny<BaseOptions>());
+            var validExpiration = TimeSpan.FromSeconds(30);
+
+            //Act
+            var isExpirationValid = contextUtils.IsCacheExpirationValid(validExpiration);
+
+            //Assert
+            Assert.True(isExpirationValid);
+        }
+
+        [Fact]
+        public void Given_ACacheExpirationValue_When_CacheExpirationIsNull_Then_ReturnFalse()
+        {
+            //Arrange
+            var contextUtils = new ContextUtils(It.IsAny<IKeyManager>(), It.IsAny<IConfiguration>(), It.IsAny<BaseOptions>());
+            TimeSpan? nullExpirationValue = null;
+
+            //Act
+            var isExpirationValid = contextUtils.IsCacheExpirationValid(nullExpirationValue);
+
+            //Assert
+            Assert.False(isExpirationValid);
+        }
+
+        [Fact]
+        public void Given_ACacheExpirationValue_When_CacheExpirationIsZero_Then_ReturnFalse()
+        {
+            //Arrange
+            var contextUtils = new ContextUtils(It.IsAny<IKeyManager>(), It.IsAny<IConfiguration>(), It.IsAny<BaseOptions>());
+            var validExpiration = TimeSpan.FromSeconds(0);
+
+            //Act
+            var isExpirationValid = contextUtils.IsCacheExpirationValid(validExpiration);
+
+            //Assert
+            Assert.False(isExpirationValid);
+        }
+
+
         //Unit test data
         public static IEnumerable<object[]> ValidGenericParamNames
         {

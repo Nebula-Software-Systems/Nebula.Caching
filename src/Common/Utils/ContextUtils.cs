@@ -1,18 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using AspectCore.DynamicProxy;
 using AspectCore.DynamicProxy.Parameters;
-using Common.CacheRepresentation.KeyValue;
 using Common.Settings;
 using Microsoft.Extensions.Configuration;
 using Nebula.Caching.Common.Attributes;
-using Nebula.Caching.Common.Constants;
 using Nebula.Caching.Common.KeyManager;
-using Nebula.Caching.Redis.Attributes;
-using Redis.Settings;
 
 namespace Nebula.Caching.Common.Utils
 {
@@ -89,9 +81,9 @@ namespace Nebula.Caching.Common.Utils
             return castedExecutedMethodAttribute.CacheDuration;
         }
 
-        public bool IsCacheExpirationValid(TimeSpan cacheExpiration)
+        public bool IsCacheExpirationValid(TimeSpan? cacheExpiration)
         {
-            return cacheExpiration != null || cacheExpiration > TimeSpan.Zero;
+            return cacheExpiration != null && cacheExpiration > TimeSpan.Zero;
         }
 
         public string[] GenerateParamsFromParamCollection(ParameterCollection parameters)
