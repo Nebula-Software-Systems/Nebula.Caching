@@ -29,7 +29,7 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 ## Roadmap
 
-To check what we want to achieve in the future, please refeer to our [ROADMAP](docs/roadmap/Roadmap.md).
+To check what we want to achieve in the future, please refer to our [ROADMAP](docs/roadmap/Roadmap.md).
 
 ## Contributing
 
