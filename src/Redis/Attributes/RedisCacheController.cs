@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.CacheManager;
@@ -31,7 +32,8 @@ namespace Nebula.Caching.Redis.Attributes
                 Type controllerType = context.Controller.GetType();
                 MethodInfo actionMethodInfo = default(MethodInfo);
                 var objectType = controllerType.GetMethod((string)context.RouteData.Values["action"]).ReturnType;
-                context.Result = (Microsoft.AspNetCore.Mvc.IActionResult)JsonConvert.DeserializeObject(value, objectType);
+                var list = await Task.Run(() => JsonConvert.DeserializeObject<Task<IActionResult>>(value));
+                context.Result = list;
             }
             else
             {
