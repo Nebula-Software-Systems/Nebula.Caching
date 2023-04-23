@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspectCore.DynamicProxy;
+using AspectCore.DynamicProxy.Parameters;
 using Common.Settings;
 using Microsoft.Extensions.Configuration;
 using Moq;
@@ -102,6 +104,28 @@ namespace Nebula.Caching.tests.Common.Utils
             //Assert
             Assert.False(cacheConfigSectionExists);
         }
+
+        // [Fact]
+        // public void Given1_A()
+        // {
+        //     //Arrange
+        //     var contextUtils = new ContextUtils(It.IsAny<IKeyManager>(), It.IsAny<IConfiguration>(), It.IsAny<BaseOptions>());
+        //     var mockedParamCollection = new Mock<ParameterCollection>();
+        //     var mockedParam = new Mock<Parameter>();
+        //     mockedParam.SetupGet(m => m.Name).Returns("param1");
+        //     List<Parameter> parameters = new List<Parameter> { mockedParam.Object };
+        //     mockedParamCollection.Setup(m => m.Count).Returns(() => parameters.Count);
+        //     mockedParamCollection.Setup(m => m[It.IsAny<int>()]).Returns<int>(i => parameters.ElementAt(i));
+        //     mockedParamCollection.Setup(m => m.GetEnumerator()).Returns(() => parameters.GetEnumerator());
+
+        //     var expectedParamList = new string[] { "param1" };
+
+        //     //Act
+        //     var generatedGenericParamList = contextUtils.GenerateParamsFromParamCollection(mockedParamCollection.Object);
+
+        //     //Assert
+        //     Assert.Equal(expectedParamList, generatedGenericParamList);
+        // }
 
         //Unit test data
         public static IEnumerable<object[]> ValidGenericParamNames

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using AspectCore.Configuration;
 using AspectCore.DependencyInjection;
 using AspectCore.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ using StackExchange.Redis;
 
 namespace Nebula.Caching.Redis.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class Extensions
     {
         public static IServiceCollection AddRedisChache(this IServiceCollection services, Configurations configs)
