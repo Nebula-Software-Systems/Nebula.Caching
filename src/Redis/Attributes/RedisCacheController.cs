@@ -31,9 +31,11 @@ namespace Nebula.Caching.Redis.Attributes
                 var value = cacheManager.Get(controllerFullPathName);
                 Type controllerType = context.Controller.GetType();
                 MethodInfo actionMethodInfo = default(MethodInfo);
-                var objectType = controllerType.GetMethod((string)context.RouteData.Values["action"]).ReturnType;
-                var list = await Task.Run(() => JsonConvert.DeserializeObject<Task<IActionResult>>(value));
-                context.Result = list;
+                //dynamic objectType = controllerType.GetMethod((string)context.RouteData.Values["action"]).ReturnType;
+                // var list = JsonConvert.DeserializeObject<Task<IActionResult>>(value);
+                // context.Result = await list;
+                var val = JsonConvert.DeserializeObject<string>(value);
+                context.Result = new Microsoft.AspNetCore.Mvc.OkObjectResult(val);
             }
             else
             {
