@@ -29,8 +29,7 @@ namespace Nebula.Caching.Redis.CacheManager
 
         public void Set(string key, string value, TimeSpan expiration)
         {
-            _redis.StringSet(key, value);
-            _redis.KeyExpire(key, expiration);
+            _redis.StringSet(key, value, expiration);
         }
 
         public async Task<bool> CacheExistsAsync(string key)
@@ -45,8 +44,7 @@ namespace Nebula.Caching.Redis.CacheManager
 
         public async Task SetAsync(string key, string value, TimeSpan expiration)
         {
-            await _redis.StringSetAsync(key, value).ConfigureAwait(false);
-            await _redis.KeyExpireAsync(key, expiration).ConfigureAwait(false);
+            await _redis.StringSetAsync(key, value, expiration);
         }
     }
 }
