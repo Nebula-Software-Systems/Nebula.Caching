@@ -13,6 +13,10 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 ## Nuget Package
 
+| Name           | Released Package                                                                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nebula-Caching | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching/) |
+
 ## Usage
 
 ## Documentation
@@ -21,8 +25,8 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 ## CI Status
 
-| Branch | Build Status | Test Coverage                                                                                                                                                         
-| ----- | ----- | ----- |
+| Branch                                                                          | Build Status                                                                                                                                                                                             | Test Coverage                                                                                                                                                                                                       |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [**Main**](https://github.com/Nebula-Software-Systems/Nebula.Caching/tree/main) | [![DotNet Main](https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml/badge.svg)](https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml) | [![Coverage Status](https://coveralls.io/repos/github/Nebula-Software-Systems/Nebula.Caching/badge.svg?branch=main&service=github)](https://coveralls.io/github/Nebula-Software-Systems/Nebula.Caching?branch=main) |
 
 ## Benchmarks
@@ -36,6 +40,7 @@ To check what we want to achieve in the future, please refer to our [ROADMAP](do
 This project welcomes and appreciates any contributions made.
 
 There are several ways you can contribute, namely:
+
 - Report any bug found.
 - Suggest some features or improvements.
 - Creating pull requests.
