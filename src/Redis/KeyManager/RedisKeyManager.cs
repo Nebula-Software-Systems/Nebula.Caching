@@ -20,12 +20,16 @@ namespace Nebula.Caching.Redis.KeyManager
 
         public string GenerateKey(MethodInfo methodInfo, string[] parameters)
         {
+            ArgumentNullException.ThrowIfNull(argument: parameters);
+
             string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
             return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
         }
 
         public string ConvertCacheKeyToConfigKey(string key)
         {
+            ArgumentNullException.ThrowIfNull(key);
+
             return (key.Replace(KeyConstants.MethodFullPathSeparator, KeyConstants.ConfigMethodFullPathSeparator))
                     .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
         }
