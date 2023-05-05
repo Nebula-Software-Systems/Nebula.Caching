@@ -19,6 +19,44 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 ## Usage
 
+### Step 1 : Install the package
+
+```
+Install-Package Nebula-Caching
+```
+
+### Step 2 : Register cache usage in the Program class
+
+```csharp
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+      // ...
+
+      builder.Host.UseNebulaCaching();
+      builder.Services.AddRedisChache(new Configurations
+      {
+        //some amazing configuration options which can be see in the samples section
+      });
+    }
+}
+
+```
+
+### Step 3 : Use the caching attribute in your interface definitions
+
+```csharp
+
+    public interface IRedisStuff
+    {
+        [RedisCache(CacheDuration = 120)]
+        List<SomeObject> SomeMethod(int param1, int param2);
+    }
+
+```
+
 ## Documentation
 
 ## Samples
