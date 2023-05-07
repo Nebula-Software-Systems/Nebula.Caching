@@ -44,13 +44,13 @@ Keep in mind the _CacheDuration_ accepts cache durations in seconds.
 
 If no value is inserted, like the first example, the default cache duration will be applied (which is 30 seconds).
 
-### Cace duration from cache registration
+### Cache duration from cache registration
 
 If you want to use another default value for your cache duration, you can do so while registring the cache.
 
 Please check [this](../CacheRegistration/CacheRegistration.md) for more information on how to do so.
 
-### Cace duration from configuration file
+### Cache duration from configuration file
 
 In an effort to make our interfaces more clean while still using custom cache duration, you can leave your cache attribute definition without specifying the cache duration, but that same cache duration comes from a configuration section of _appsettings.json_.
 
