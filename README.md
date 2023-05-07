@@ -48,7 +48,7 @@ public class Program
       builder.Host.UseNebulaCaching();
       builder.Services.AddRedisChache(new Configurations
       {
-        //some amazing configuration options which can be see in the samples section
+        //some amazing configuration options which can be see in the samples or documentation section
       });
     }
 }
