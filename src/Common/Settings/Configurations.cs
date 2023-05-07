@@ -12,7 +12,7 @@ namespace Common.Settings
     [ExcludeFromCodeCoverage]
     public class Configurations
     {
-        public string ConfigurationSection { get; set; }
+        public string ConfigurationSection { get; set; } = CacheConfigurationConstants.ConfigurationSection;
         public int DefaultCacheDurationInSeconds { get; set; } = CacheDurationConstants.DefaultCacheDurationInSeconds;
         public RedisConfigurationFlavour ConfigurationFlavour { get; set; }
         public Action<ConfigurationOptions>? Configure { get; set; }

@@ -21,8 +21,18 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 ### Step 1 : Install the package
 
+Install the package via Package Manager:
+
 ```
 Install-Package Nebula-Caching
+```
+
+or
+
+Via .NET CLI:
+
+```
+dotnet add package Nebula-Caching
 ```
 
 ### Step 2 : Register cache usage in the Program class
@@ -58,6 +68,8 @@ public class Program
 ```
 
 ## Documentation
+
+Our documentation can be found [here](docs/documentation/Docs.md).
 
 ## Samples
 
