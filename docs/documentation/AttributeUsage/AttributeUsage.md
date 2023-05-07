@@ -83,3 +83,15 @@ Gorold-Payment-Attributes-RedisStuff -> Namespace where the interface, where the
 
 --SomeMethod--{param1}--{param2}--{name} -> The remaining part of the key is constitued of the method where the attribute was placed, plus the methods it might contain. If no parameters exist, then we don't need to insert them on the cache key definition. If you notice closely, when you are adding cache duration for methods that take parameters, you must add such parameters inside the curly braces. You should add only the parameter name, not its value. Also notice that, unline above, we use double '-' to separate things.
 ```
+
+### Hierarchy in cache duration definition
+
+One might ask what happens if I define the cache duration inline, meaning in the interface definition, and also in the *appsettings.json* file.
+
+As of today, the cache defined in the configuration file will be taken in consideration in this conflict scenario.
+
+So, this are the cache values taken:
+1. ***Cache defined both in the configuration file and in the interface method***: value defined in the configuration file taken
+2. ***Cache only defined in the configuration file***: value defined taken as the cache duration
+3. ***Cache only defined in the interface method***: value defined taken as the cache duration
+4. ***Cache not defined in the configuration file nor in the interface method***: default value for cache duration taken
