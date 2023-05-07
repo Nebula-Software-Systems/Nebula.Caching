@@ -72,3 +72,5 @@ Below you can find an example of how this could exist in your configuration:
     }
   }
 ```
+
+If you notice closely, when you are adding cache duration for methods that take parameters, you must add such parameters inside the curly braces. You should add only the parameter name, not its value.
