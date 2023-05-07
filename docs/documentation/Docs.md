@@ -1,4 +1,4 @@
-## Documentation entry point
+# Documentation entry point
 
 ## Registring the cache usage
 
