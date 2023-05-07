@@ -73,4 +73,13 @@ Below you can find an example of how this could exist in your configuration:
   }
 ```
 
-If you notice closely, when you are adding cache duration for methods that take parameters, you must add such parameters inside the curly braces. You should add only the parameter name, not its value.
+Let's take a closer look at the structure of the second configuration cache key (same conclusions apply for any kind of key to be inserted).
+
+```
+//this is the key we are analyzing
+Gorold-Payment-Attributes-RedisStuff--SomeMethod--{param1}--{param2}--{name}
+
+Gorold-Payment-Attributes-RedisStuff -> Namespace where the interface, where the attribute was placed, implementation is located. Notice that we replaced all the '.' for '-'.
+
+--SomeMethod--{param1}--{param2}--{name} -> The remaining part of the key is constitued of the method where the attribute was placed, plus the methods it might contain. If no parameters exist, then we don't need to insert them on the cache key definition. If you notice closely, when you are adding cache duration for methods that take parameters, you must add such parameters inside the curly braces. You should add only the parameter name, not its value. Also notice that, unline above, we use double '-' to separate things.
+```
