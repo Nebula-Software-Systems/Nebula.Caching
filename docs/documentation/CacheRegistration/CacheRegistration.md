@@ -51,7 +51,18 @@ This configuration flavor frees you from having to register Redis, which means t
 For our cache service registration to properly work, you need to have in your configuration section the connection string where your Redis service is hosted. You need to place it under the configuration key *CacheServiceUrl*, which is where our software will read from to reach your Redis service.
 
 ### Configured
+If using our Vanilla option is not enough for you and you want to add more advanced configuration to Redis, you can do so by using our Configured flavor.
 
+With this, you can pass more advanced configuration, like the *Configure* or the *Configuration* that we will speak below, and which are tightly bound to Redis.
+
+There are a couple of scenarios to have in consideration when using this configuration flavor:
+1. Using the ***Configuration*** property as the source of configuration
+   - In this case, you'll need to set the property and such property will be used to configure Redis. Optionally, you can also set the *Log* property. You don't need to have the *CacheServiceUrl* cache section defined in your *appsettings.json*.
+
+2. Not using the ***Configuration*** property. This means that:
+   - You need to have to have the *CacheServiceUrl* cache section defined in your *appsettings.json*.
+   - You need to configure the ***Configure*** property.
+   - Optionally, you can also configure the ***Log*** property.
 
 ## Configure
 
