@@ -65,7 +65,20 @@ There are a couple of scenarios to have in consideration when using this configu
    - Optionally, you can also configure the ***Log*** property.
 
 ## Configure
+This property represents the ***Configure*** property of the Redis library. This property is of type *Action<ConfigurationOptions>*.
+
+According to their documentation, the *Configure* property is:
+> Action to further modify the parsed configuration options.
+
+Also according to their documentation, *ConfigurationOptions* is:
+> The options relevant to a set of redis connections.
 
 ## Configuration
+This property represents the ***Configuration*** property of the Redis library, which is of type *ConfigurationOptions*.
+
+According to their documentation, the ***Configuration*** property is:
+> The configuration options to use for this multiplexer.
 
 ## Log
+
+## Example of a cache registration
