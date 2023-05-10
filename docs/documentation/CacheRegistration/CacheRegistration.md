@@ -80,5 +80,9 @@ According to their documentation, the ***Configuration*** property is:
 > The configuration options to use for this multiplexer.
 
 ## Log
+This property represents the ***Log*** property of the Redis library, which is of type *TextWriter*.
+
+According to their documentation, the ***Log*** property is:
+> The System.IO.TextWriter to log to.
 
 ## Example of a cache registration
