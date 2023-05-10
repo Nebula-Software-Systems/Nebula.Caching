@@ -86,3 +86,36 @@ According to their documentation, the ***Log*** property is:
 > The System.IO.TextWriter to log to.
 
 ## Example of a cache registration
+Below you can find an example of what the cache registration could look like in your *Program.cs* class, having all we discussed in consideration:
+
+```csharp
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+      // ...
+        builder.Host.UseNebulaCaching();
+        builder.Services.AddRedisChache(new Configurations
+        {
+            ConfigurationSection = "RedisConfig",
+            ConfigurationFlavour = RedisConfigurationFlavour.Vanilla,
+            DefaultCacheDurationInSeconds = 120
+        });
+    }
+}
+
+```
+
+Because we are using the *Vanilla* configuration flavor, we need a configuration section that would have the URL to our Redis cache service:
+
+```json
+
+"RedisConfig": {
+    "CacheServiceUrl" : "localhost",
+    "CacheSettings" : {
+      // our cache duration configuration
+    }
+  }
+
+```
