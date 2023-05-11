@@ -73,13 +73,13 @@ Our documentation can be found [here](docs/documentation/Docs.md).
 
 ## Samples
 
+Some useful code snippets can be found [here](docs/samples/Samples.md).
+
 ## CI Status
 
 | Branch                                                                          | Build Status                                                                                                                                                                                             | Test Coverage                                                                                                                                                                                                       |
 | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [**Main**](https://github.com/Nebula-Software-Systems/Nebula.Caching/tree/main) | [![DotNet Main](https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml/badge.svg)](https://github.com/Nebula-Software-Systems/Nebula.Caching/actions/workflows/cicd.yaml) | [![Coverage Status](https://coveralls.io/repos/github/Nebula-Software-Systems/Nebula.Caching/badge.svg?branch=main&service=github)](https://coveralls.io/github/Nebula-Software-Systems/Nebula.Caching?branch=main) |
-
-## Benchmarks
 
 ## Roadmap
 
