@@ -58,7 +58,7 @@ When configuring your [cache usage](../CacheRegistration/CacheRegistration.md), 
 
 Under the section you defined above, create a new section called _CacheSettings_, where you are going to place the your cache duration.
 
-The key you need to use here should the a template key based upon the assembly your interface implementation lives upon. For more information on what to place on the key part, please refer to [this](../CacheKeyGeneration/CacheKeyGeneration.md).
+The key you need to use here should the a template key based upon the namespace your interface implementation lives upon. For more information on what to place on the key part, please refer to [this](../CacheKeyGeneration/CacheKeyGeneration.md).
 
 The value for your cache duration should follow the _HH.MM.SS_ pattern, where HH represents Hours, MM represents Minutes and SS represent seconds. So, for example, if you want your cache to have a duration of 1 hour, 15 minutes and 30 seconds, the value should for the duration should be _01:15:30_.
 
@@ -86,12 +86,13 @@ Gorold-Payment-Attributes-RedisStuff -> Namespace where the interface, where the
 
 ### Hierarchy in cache duration definition
 
-One might ask what happens if I define the cache duration inline, meaning in the interface definition, and also in the *appsettings.json* file.
+One might ask what happens if I define the cache duration inline, meaning in the interface definition, and also in the _appsettings.json_ file.
 
 As of today, the cache defined in the configuration file will be taken in consideration in this conflict scenario.
 
 So, this are the cache values taken:
-1. ***Cache defined both in the configuration file and in the interface method***: value defined in the configuration file taken
-2. ***Cache only defined in the configuration file***: value defined taken as the cache duration
-3. ***Cache only defined in the interface method***: value defined taken as the cache duration
-4. ***Cache not defined in the configuration file nor in the interface method***: default value for cache duration taken
+
+1. **_Cache defined both in the configuration file and in the interface method_**: value defined in the configuration file taken
+2. **_Cache only defined in the configuration file_**: value defined taken as the cache duration
+3. **_Cache only defined in the interface method_**: value defined taken as the cache duration
+4. **_Cache not defined in the configuration file nor in the interface method_**: default value for cache duration taken
