@@ -43,7 +43,7 @@ public class Program
       // ...
 
         //since managing Redis is not done by the library, we must have *IConnectionMultiplexer* injected for the library to properly work
-        services.AddSingleton<IConnectionMultiplexer>(ctx =>
+        builder.Services.AddSingleton<IConnectionMultiplexer>(ctx =>
         {
             return ConnectionMultiplexer.Connect("<redis-service-connection-string>");
         });
