@@ -67,3 +67,7 @@ The _appsettings.json_ file should have the configured section:
     }
   }
 ```
+
+### Project that uses Nebula.Caching
+
+Please check [this project](https://github.com/Gorold-Streaming-Services/Gorold.Payment/blob/main/Gorold.Payment/Program.cs) for a real use case of our caching solution.
