@@ -80,7 +80,7 @@ namespace Nebula.Caching.Common.Utils
                                                                     x => typeof(T).IsAssignableFrom(x.GetType())
                                                                 );
             var castedExecutedMethodAttribute = executedMethodAttribute as T;
-            return castedExecutedMethodAttribute.CacheDuration;
+            return castedExecutedMethodAttribute.CacheDurationInSeconds;
         }
 
         public bool IsCacheExpirationValid(TimeSpan? cacheExpiration)

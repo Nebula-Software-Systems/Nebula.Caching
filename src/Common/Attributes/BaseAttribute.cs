@@ -11,6 +11,6 @@ namespace Nebula.Caching.Common.Attributes
     [ExcludeFromCodeCoverage]
     public class BaseAttribute : Attribute
     {
-        public int CacheDuration { get; set; } = CacheDurationConstants.DefaultCacheDurationInSeconds;
+        public int CacheDurationInSeconds { get; set; } = CacheDurationConstants.DefaultCacheDurationInSeconds;
     }
 }

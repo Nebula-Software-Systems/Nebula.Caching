@@ -61,7 +61,7 @@ public class Program
 
     public interface IRedisStuff
     {
-        [RedisCache(CacheDuration = 120)]
+        [RedisCache(CacheDurationInSeconds = 120)]
         List<SomeObject> SomeMethod(int param1, int param2);
     }
 

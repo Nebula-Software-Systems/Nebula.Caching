@@ -25,22 +25,22 @@ There are several ways to set your cache duration.
 
 ### Cache duration from attribute
 
-The easiest way to set the cache duration is by declaring it directly on the interface definition, using the _CacheDuration_ property.
+The easiest way to set the cache duration is by declaring it directly on the interface definition, using the _CacheDurationInSeconds_ property.
 
 ```csharp
 
     public interface IRedisStuff
     {
-        [RedisCache(CacheDuration = 120)]
+        [RedisCache(CacheDurationInSeconds = 120)]
         List<SomeObject> SomeMethod(int param1, int param2);
 
-        [RedisCache(CacheDuration = 272)]
+        [RedisCache(CacheDurationInSeconds = 272)]
         Task<List<SomeObject>> AnotherMethod();
     }
 
 ```
 
-Keep in mind the _CacheDuration_ accepts cache durations in seconds.
+Keep in mind the _CacheDurationInSeconds_ accepts cache durations in seconds.
 
 If no value is inserted, like the first example, the default cache duration will be applied (which is 600 seconds).
 
