@@ -42,7 +42,7 @@ The easiest way to set the cache duration is by declaring it directly on the int
 
 Keep in mind the _CacheDuration_ accepts cache durations in seconds.
 
-If no value is inserted, like the first example, the default cache duration will be applied (which is 30 seconds).
+If no value is inserted, like the first example, the default cache duration will be applied (which is 600 seconds).
 
 ### Cache duration from cache registration
 

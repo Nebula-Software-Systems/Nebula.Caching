@@ -32,7 +32,7 @@ String that represents the section in your _appsettings.json_ where the cache co
 
 Sometimes we don't want to have the hassle to define cache values for each method, and instead just use a pre-defined cache duration value.
 
-If you think the current default value for the cache duration doesn't suit you well (30 seconds), then you have the opportunity to override it by making use of the _DefaultCacheDurationInSeconds_ in the _Configurations_ object.
+If you think the current default value for the cache duration doesn't suit you well (600 seconds), then you have the opportunity to override it by making use of the _DefaultCacheDurationInSeconds_ in the _Configurations_ object.
 
 Insert the int value that represents the new default cache duration, in seconds.
 
