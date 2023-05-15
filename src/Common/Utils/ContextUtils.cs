@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Reflection;
 using AspectCore.DynamicProxy;
 using AspectCore.DynamicProxy.Parameters;
@@ -24,11 +25,18 @@ namespace Nebula.Caching.Common.Utils
 
         public int GetCacheDuration<T>(string key, AspectContext context) where T : BaseAttribute
         {
-            return CacheConfigSectionExists() ?
+            return CacheExistInConfiguration(key, context) ?
                                                 RetrieveCacheExpirationFromConfig(key, context)
                                                 :
                                                 RetrieveCacheExpirationFromAttribute<T>(context);
         }
+
+        public bool CacheExistInConfiguration(string key, AspectContext context)
+        {
+            return _baseOptions.CacheSettings.ContainsKey(key);
+        }
+
+
 
         public MethodInfo GetExecutedMethodInfo(AspectContext context)
         {
@@ -81,6 +89,16 @@ namespace Nebula.Caching.Common.Utils
                                                                 );
             var castedExecutedMethodAttribute = executedMethodAttribute as T;
             return castedExecutedMethodAttribute.CacheDurationInSeconds;
+        }
+
+        public bool MethoExecutedHasCacheGroup<T>(AspectContext context) where T : BaseAttribute
+        {
+            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
+                                    .FirstOrDefault(
+                                                        x => typeof(T).IsAssignableFrom(x.GetType())
+                                                    );
+            var castedExecutedMethodAttribute = executedMethodAttribute as T;
+            return !String.IsNullOrEmpty(castedExecutedMethodAttribute.CacheGroup);
         }
 
         public bool IsCacheExpirationValid(TimeSpan? cacheExpiration)
