@@ -33,10 +33,11 @@ namespace Nebula.Caching.Common.Utils
 
         public bool CacheExistInConfiguration(string key, AspectContext context)
         {
-            return _baseOptions.CacheSettings.ContainsKey(key);
+            if (_baseOptions.CacheSettings is null) return false;
+
+            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, GenerateParamsFromParamCollection(context.GetParameters())));
+            return _baseOptions.CacheSettings.ContainsKey(convertedKey);
         }
-
-
 
         public MethodInfo GetExecutedMethodInfo(AspectContext context)
         {
@@ -78,7 +79,7 @@ namespace Nebula.Caching.Common.Utils
                 return (int)cacheExpiration.TotalSeconds;
             }
 
-            throw new InvalidOperationException($"Cache key {key} either doesn't exist on the configuration or if exist has an invalid value for its duration. Cache duration should be grater than zero.");
+            throw new InvalidOperationException($"Cache key {key} either doesn't exist on the configuration or if exist has an invalid value for its duration. Cache duration should be greater than zero.");
         }
 
         public int RetrieveCacheExpirationFromAttribute<T>(AspectContext context) where T : BaseAttribute
@@ -87,18 +88,30 @@ namespace Nebula.Caching.Common.Utils
                                                 .FirstOrDefault(
                                                                     x => typeof(T).IsAssignableFrom(x.GetType())
                                                                 );
+
             var castedExecutedMethodAttribute = executedMethodAttribute as T;
-            return castedExecutedMethodAttribute.CacheDurationInSeconds;
+
+            return IsCacheGroupDefined(castedExecutedMethodAttribute) ?
+                                                                                    RetrieveCacheExpirationFromCacheGroup(castedExecutedMethodAttribute.CacheGroup)
+                                                                                    :
+                                                                                    castedExecutedMethodAttribute.CacheDurationInSeconds;
         }
 
-        public bool MethoExecutedHasCacheGroup<T>(AspectContext context) where T : BaseAttribute
+        public bool IsCacheGroupDefined(BaseAttribute attribute)
         {
-            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
-                                    .FirstOrDefault(
-                                                        x => typeof(T).IsAssignableFrom(x.GetType())
-                                                    );
-            var castedExecutedMethodAttribute = executedMethodAttribute as T;
-            return !String.IsNullOrEmpty(castedExecutedMethodAttribute.CacheGroup);
+            return !String.IsNullOrEmpty(attribute.CacheGroup);
+        }
+
+        public int RetrieveCacheExpirationFromCacheGroup(string cacheGroup)
+        {
+            var cacheExpiration = _baseOptions.CacheGroupSettings.GetValueOrDefault(cacheGroup);
+
+            if (IsCacheExpirationValid(cacheExpiration))
+            {
+                return (int)cacheExpiration.TotalSeconds;
+            }
+
+            throw new InvalidOperationException($"Cache group {cacheGroup} either doesn't exist on the configuration or if exist has an invalid value for its duration. Cache duration should be greater than zero.");
         }
 
         public bool IsCacheExpirationValid(TimeSpan? cacheExpiration)
@@ -117,7 +130,6 @@ namespace Nebula.Caching.Common.Utils
             }
 
             return genericParamsList.ToArray();
-
         }
 
         public string GenerateGeneriConfigCacheParameter(string parameter)
