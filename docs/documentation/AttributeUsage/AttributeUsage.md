@@ -60,7 +60,7 @@ Under the section you defined above, create a new section called _CacheSettings_
 
 The key you need to use here should the a template key based upon the namespace your interface implementation lives upon. For more information on what to place on the key part, please refer to [this](../CacheKeyGeneration/CacheKeyGeneration.md).
 
-The value for your cache duration should follow the _HH.MM.SS_ pattern, where HH represents Hours, MM represents Minutes and SS represent seconds. So, for example, if you want your cache to have a duration of 1 hour, 15 minutes and 30 seconds, the value should for the duration should be _01:15:30_.
+The value for your cache duration should follow the _HH:MM:SS_ pattern, where HH represents Hours, MM represents Minutes and SS represent seconds. So, for example, if you want your cache to have a duration of 1 hour, 15 minutes and 30 seconds, the value should for the duration should be _01:15:30_.
 
 Below you can find an example of how this could exist in your configuration:
 
@@ -96,3 +96,33 @@ So, this are the cache values taken:
 2. **_Cache only defined in the configuration file_**: value defined taken as the cache duration
 3. **_Cache only defined in the interface method_**: value defined taken as the cache duration
 4. **_Cache not defined in the configuration file nor in the interface method_**: default value for cache duration taken
+
+## Cache Groups
+
+Sometimes you may have the need to give a group of caches the same duration, because there might be some logical grouping that you want to have. For this case, we have created cache groups.
+
+Cache groups allow you to specify, in your attribute definition, the cache group it belongs. That is done via the _CacheGroup_ property. There must be a corresponding configuration section under your cache root configuration section (as we saw before, _RedisConfig_ was the default for that) that indicates the duration for that cache group; that should be in a section called _CacheGroupSettings_ under your root one. The duration time specificied should follow the pattern spoken about earlier, meaning following the _HH:MM:SS_ pattern
+
+Below you can find an example of cache groups in pratice, which puts the cache created on the method _SomeMethod_ inside a cache group called _GroupA_ and, according to this group's cache configuration, the cache will have a duration of 2 hours 23 minutes and 15 seconds.
+
+### Interface definition of cache group
+
+```csharp
+
+    public interface IRedisStuff
+    {
+        [RedisCache(CacheGroup = "GroupA")]
+        List<SomeObject> SomeMethod(int param1, int param2);
+    }
+
+```
+
+### Configuration definition of cache group
+
+```json
+  "RedisConfig": {
+    "CacheGroupSettings": {
+      "GroupA" : "02:23:15"
+    }
+  }
+```
