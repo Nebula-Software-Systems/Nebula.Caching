@@ -106,7 +106,7 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private string GenerateKey()
         {
-            return _keyManager.GenerateKey(_utils.GetExecutedMethodInfo(context), _utils.GetMethodParameters(context));
+            return _keyManager.GenerateKey(_utils.GetExecutedMethodInfo(context), _utils.GetServiceMethodInfo(context), _utils.GetMethodParameters(context));
         }
     }
 }

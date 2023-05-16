@@ -35,13 +35,18 @@ namespace Nebula.Caching.Common.Utils
         {
             if (_baseOptions.CacheSettings is null) return false;
 
-            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, GenerateParamsFromParamCollection(context.GetParameters())));
+            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, context.ServiceMethod, GenerateParamsFromParamCollection(context.GetParameters())));
             return _baseOptions.CacheSettings.ContainsKey(convertedKey);
         }
 
         public MethodInfo GetExecutedMethodInfo(AspectContext context)
         {
             return context.ImplementationMethod;
+        }
+
+        public MethodInfo GetServiceMethodInfo(AspectContext context)
+        {
+            return context.ServiceMethod;
         }
 
         public string[] GetMethodParameters(AspectContext context)
@@ -71,7 +76,7 @@ namespace Nebula.Caching.Common.Utils
         {
             ArgumentNullException.ThrowIfNull(key);
 
-            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, GenerateParamsFromParamCollection(context.GetParameters())));
+            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, context.ServiceMethod, GenerateParamsFromParamCollection(context.GetParameters())));
             var cacheExpiration = _baseOptions.CacheSettings.GetValueOrDefault(convertedKey);
 
             if (IsCacheExpirationValid(cacheExpiration))
