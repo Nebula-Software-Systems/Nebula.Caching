@@ -162,3 +162,7 @@ An example of that can be seen below:
 > :warning: Please note that, if you choose having a custom cache key name, if you want to use the configurations to specify the cache duration, you need to place the custom cache name chosen, and not the default generated one.
 
 > :warning: When chosing your custom cache names, you must manage key collision, meaning chosing unique custom cache keys, otherwise you will have unwanted behavior in your application.
+
+Below you can find a screenshot of what could that custom cache key name look like in reality.
+
+![Screenshot of a cache key, displayed using a Redis Client called Another Redis Desktop Manager](../../media/cacheKeys/CustomCacheName.PNG)
