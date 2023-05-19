@@ -11,7 +11,7 @@ An example is shown below.
     public interface IRedisStuff
     {
         [RedisCache]
-        List<SomeObject> SomeMethod(int param1, int param2);
+        List<SomeObject> SomeMethod(int param1, int param2, string name);
 
         [RedisCache]
         Task<List<SomeObject>> AnotherMethod();
@@ -32,7 +32,7 @@ The easiest way to set the cache duration is by declaring it directly on the int
     public interface IRedisStuff
     {
         [RedisCache(CacheDurationInSeconds = 120)]
-        List<SomeObject> SomeMethod(int param1, int param2);
+        List<SomeObject> SomeMethod(int param1, int param2, string name);
 
         [RedisCache(CacheDurationInSeconds = 272)]
         Task<List<SomeObject>> AnotherMethod();
@@ -112,7 +112,7 @@ Below you can find an example of cache groups in pratice, which puts the cache c
     public interface IRedisStuff
     {
         [RedisCache(CacheGroup = "GroupA")]
-        List<SomeObject> SomeMethod(int param1, int param2);
+        List<SomeObject> SomeMethod(int param1, int param2, string name);
     }
 
 ```
@@ -126,3 +126,39 @@ Below you can find an example of cache groups in pratice, which puts the cache c
     }
   }
 ```
+
+## Custom Key Names
+
+Traditionally, you want to use the automatically generated cache keys, because they are designed so that no collisions occcur. The way we generate keys is also helpful, because they indicate from which method you are caching data from, which can be very helpful.
+
+Despite of the advantages of using our generated cache keys, you might want to set your cache keys with custom names which might be better for your, mainly because you might understand them better.
+
+To fulfill that need, we introduced a property in our attribute definition called _**CustomCacheName**_.
+
+An example of that can be seen below:
+
+### Interface definition of custom cache name
+
+```csharp
+
+    public interface IRedisStuff
+    {
+        [RedisCache(CustomCacheName = "MyCustomCacheName")]
+        List<SomeObject> SomeMethod(int param1, int param2, string name);
+    }
+
+```
+
+### Configuration definition of our cache duration based on our custom cache key name
+
+```json
+  "RedisConfig": {
+    "CacheGroupSettings": {
+      "MyCustomCacheName" : "04:00:00"
+    }
+  }
+```
+
+> :warning: Please note that, if you choose having a custom cache key name, if you want to use the configurations to specify the cache duration, you need to place the custom cache name chosen, and not the default generated one.
+
+> :warning: When chosing your custom cache names, you must manage key collision, meaning chosing unique custom cache keys, otherwise you will have unwanted behavior in your application.
