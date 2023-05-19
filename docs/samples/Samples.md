@@ -68,6 +68,10 @@ The _appsettings.json_ file should have the configured section:
   }
 ```
 
+### After configuring your application with any of the configurations above, you start configuring your attributes to use cache
+
+Please check [this documentation file](../documentation/AttributeUsage/AttributeUsage.md) to have a lot of samples and use cases about some variety of attribute configurations.
+
 ### Project that uses Nebula.Caching
 
 Please check [this project](https://github.com/Gorold-Streaming-Services/Gorold.Payment/blob/main/Gorold.Payment/Program.cs) for a real use case of our caching solution.
