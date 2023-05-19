@@ -129,9 +129,9 @@ Below you can find an example of cache groups in pratice, which puts the cache c
 
 ## Custom Key Names
 
-Traditionally, you want to use the automatically generated cache keys, because they are designed so that no collisions occcur. The way we generate keys is also helpful, because they indicate from which method you are caching data from, which can be very helpful.
+Traditionally, you want to use the automatically generated cache keys, because they are designed so that no collisions occur. The way we generate keys is also helpful because they indicate from which method you are caching data from, which can be very helpful.
 
-Despite of the advantages of using our generated cache keys, you might want to set your cache keys with custom names which might be better for your, mainly because you might understand them better.
+Despite the advantages of using our generated cache keys, you might want to set your cache keys with custom names which might be better for your, mainly because you might understand them better.
 
 To fulfill that need, we introduced a property in our attribute definition called _**CustomCacheName**_.
 
@@ -159,9 +159,9 @@ An example of that can be seen below:
   }
 ```
 
-> :warning: Please note that, if you choose having a custom cache key name, if you want to use the configurations to specify the cache duration, you need to place the custom cache name chosen, and not the default generated one.
+> :warning: Please note that, if you choose to have a custom cache key name, if you want to use the configurations to specify the cache duration, you need to place the custom cache name chosen, and not the default generated one.
 
-> :warning: When chosing your custom cache names, you must manage key collision, meaning chosing unique custom cache keys, otherwise you will have unwanted behavior in your application.
+> :warning: When choosing your custom cache names, you must manage key collision, meaning choosing unique custom cache keys, otherwise you will have unwanted behavior in your application.
 
 Below you can find a screenshot of what could that custom cache key name look like in reality.
 
