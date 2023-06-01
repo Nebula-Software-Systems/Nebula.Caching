@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Common.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.Constants;
+using Nebula.Caching.Redis.Settings;
 using Redis.Settings;
 using StackExchange.Redis;
 
@@ -13,7 +9,7 @@ namespace Redis.Extensions.RedisExtensions
 {
     public static class RedisExtensions
     {
-        public static IServiceCollection AddRedisExtensions(this IServiceCollection services, Configurations configs)
+        public static IServiceCollection AddRedisExtensions(this IServiceCollection services, RedisConfigurations configs)
         {
             CacheDurationConstants.DefaultCacheDurationInSeconds = configs.DefaultCacheDurationInSeconds;
 
