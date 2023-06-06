@@ -398,5 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 .DS_Store
 k8s/sp.sh
-Nebula.Caching.sln
 .vscode/settings.json
