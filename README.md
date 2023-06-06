@@ -13,9 +13,9 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 ## Nuget Package
 
-| Name           | Released Package                                                                                                                                      |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Nebula-Caching | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching/) |
+| Name                 | Released Package                                                                                                                                                  |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nebula-Caching-Redis | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching-Redis?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching-Redis/) |
 
 ## Usage
 
@@ -24,7 +24,7 @@ As of today, we only support caching using Redis, but in the future we hope to s
 Install the package via Package Manager:
 
 ```
-Install-Package Nebula-Caching
+Install-Package Nebula-Caching-Redis
 ```
 
 or
@@ -32,7 +32,7 @@ or
 Via .NET CLI:
 
 ```
-dotnet add package Nebula-Caching
+dotnet add package Nebula-Caching-Redis
 ```
 
 ### Step 2 : Register cache usage in the Program class

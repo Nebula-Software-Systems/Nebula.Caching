@@ -1,30 +1,17 @@
 using System.Diagnostics.CodeAnalysis;
-using AspectCore.Configuration;
-using AspectCore.DependencyInjection;
-using AspectCore.Extensions.DependencyInjection;
-using Common.Settings;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Nebula.Caching.Common.CacheManager;
-using Nebula.Caching.Common.KeyManager;
-using Nebula.Caching.Common.Utils;
-using Nebula.Caching.Redis.CacheManager;
-using Nebula.Caching.Redis.Interceptors;
-using Nebula.Caching.Redis.KeyManager;
+using Nebula.Caching.Redis.Settings;
 using Redis.Extensions.InterceptorExtensions;
 using Redis.Extensions.ManagerExtensions;
 using Redis.Extensions.RedisExtensions;
 using Redis.Extensions.UtilsExtensions;
-using Redis.Settings;
-using StackExchange.Redis;
 
 namespace Nebula.Caching.Redis.Extensions
 {
     [ExcludeFromCodeCoverage]
     public static class Extensions
     {
-        public static IServiceCollection AddRedisChache(this IServiceCollection services, Configurations configs)
+        public static IServiceCollection AddRedisChache(this IServiceCollection services, RedisConfigurations configs)
         {
             return services
                         .AddRedisInterceptor()
