@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.Extensions.Caching.Memory;
 using Nebula.Caching.Common.CacheManager;
+using Nebula.Caching.Common.Compression;
 
 namespace Nebula.Caching.InMemory.CacheManager
 {
@@ -25,8 +26,9 @@ namespace Nebula.Caching.InMemory.CacheManager
 
         public string Get(string key)
         {
-            _memoryCache.TryGetValue(key, out string value);
-            return value;
+            _memoryCache.TryGetValue(key, out byte[] value);
+            var data = GZipCompression.Decompress(value);
+            return Encoding.UTF8.GetString(data);
         }
 
         public async Task<string> GetAsync(string key)
@@ -41,7 +43,9 @@ namespace Nebula.Caching.InMemory.CacheManager
                 AbsoluteExpirationRelativeToNow = expiration
             };
 
-            _memoryCache.Set(key, value, cacheEntryOptions);
+            byte[] compressedData = GZipCompression.Compress(Encoding.UTF8.GetBytes(value));
+
+            _memoryCache.Set(key, compressedData, cacheEntryOptions);
         }
 
         public async Task SetAsync(string key, string value, TimeSpan expiration)
