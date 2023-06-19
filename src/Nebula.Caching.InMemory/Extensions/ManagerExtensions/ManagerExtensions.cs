@@ -16,6 +16,7 @@ namespace Nebula.Caching.InMemory.Extensions.ManagerExtensions
             services.AddScoped<ICacheManager>(serviceProvider =>
             {
                 var memoryCache = serviceProvider.GetRequiredService<IMemoryCache>();
+
                 return new InMemoryCacheManager(memoryCache);
             });
 

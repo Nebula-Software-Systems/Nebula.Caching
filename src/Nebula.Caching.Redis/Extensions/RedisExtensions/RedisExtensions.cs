@@ -13,6 +13,8 @@ namespace Redis.Extensions.RedisExtensions
         {
             CacheDurationConstants.DefaultCacheDurationInSeconds = configs.DefaultCacheDurationInSeconds;
 
+            CacheConfigurationConstants.ConfigurationSection = "RedisConfig";
+
             services.AddSingleton<RedisOptions>(ctx =>
             {
                 var configuration = ctx.GetService<IConfiguration>();

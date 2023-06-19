@@ -7,6 +7,6 @@ namespace Nebula.Caching.Common.Constants
 {
     public static class CacheConfigurationConstants
     {
-        public static string ConfigurationSection = "RedisConfig";
+        public static string ConfigurationSection = "";
     }
 }
