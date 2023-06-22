@@ -35,7 +35,7 @@ Via .NET CLI:
 dotnet add package Nebula-Caching-Redis
 ```
 
-### Step 2 : Register cache usage in the Program class
+### Step 2 : Register cache usage in the Program class (will change depending on which caching provider you are using)
 
 ```csharp
 
@@ -55,7 +55,7 @@ public class Program
 
 ```
 
-### Step 3 : Use the caching attribute in your interface definitions
+### Step 3 : Use the caching attribute in your interface definitions (will change depending on which caching provider you are using)
 
 ```csharp
 
@@ -69,11 +69,11 @@ public class Program
 
 ## Documentation
 
-Our documentation can be found [here](docs/documentation/Docs.md).
+Our documentation can be found [here](docs/documentation/).
 
 ## Samples
 
-Some useful code snippets can be found [here](docs/samples/Samples.md).
+Some useful code snippets can be found [here](docs/samples/).
 
 ## CI Status
 
