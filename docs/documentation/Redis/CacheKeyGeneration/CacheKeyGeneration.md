@@ -67,4 +67,4 @@ The second section, that is separated by colon (:), corresponds to the method wh
 
 In the below image, you can find a live example of this happening.
 
-![Screenshot of a cache key, displayed using a Redis Client called Another Redis Desktop Manager](../../media/cacheKeys/CacheKeyExample1.PNG)
+![Screenshot of a cache key, displayed using a Redis Client called Another Redis Desktop Manager](../../../media/cacheKeys/CacheKeyExample1.PNG)
