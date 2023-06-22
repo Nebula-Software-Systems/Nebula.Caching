@@ -1,6 +1,6 @@
 # Registring the cache usage
 
-As mentioned in the [README](../../../README.md), the first step to start using out our cache is to use the following methods inside the _Program.cs_ class:
+As mentioned in the [README](../../../../README.md), the first step to start using out our cache is to use the following methods inside the _Program.cs_ class:
 
 ```csharp
 
