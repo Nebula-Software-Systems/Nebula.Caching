@@ -4,8 +4,7 @@ namespace Nebula.Caching.Common.Compression
 {
     public class GZipCompression
     {
-
-        public static byte[] Compress(byte[] dataToCompress)
+        public byte[] Compress(byte[] dataToCompress)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -17,7 +16,7 @@ namespace Nebula.Caching.Common.Compression
             }
         }
 
-        public static byte[] Decompress(byte[] dataToDecompress)
+        public byte[] Decompress(byte[] dataToDecompress)
         {
             using (var memoryStream = new MemoryStream(dataToDecompress))
             {

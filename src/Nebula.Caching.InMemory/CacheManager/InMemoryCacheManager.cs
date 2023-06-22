@@ -8,10 +8,12 @@ namespace Nebula.Caching.InMemory.CacheManager
     public class InMemoryCacheManager : ICacheManager
     {
         private readonly IMemoryCache _memoryCache;
+        private readonly GZipCompression _gzipCompression;
 
-        public InMemoryCacheManager(IMemoryCache memoryCache)
+        public InMemoryCacheManager(IMemoryCache memoryCache, GZipCompression gzipCompression)
         {
             _memoryCache = memoryCache;
+            _gzipCompression = gzipCompression;
         }
 
         public bool CacheExists(string key)
@@ -27,7 +29,7 @@ namespace Nebula.Caching.InMemory.CacheManager
         public string Get(string key)
         {
             _memoryCache.TryGetValue(key, out byte[] value);
-            var data = GZipCompression.Decompress(value);
+            var data = _gzipCompression.Decompress(value);
             return Encoding.UTF8.GetString(data);
         }
 
@@ -43,7 +45,7 @@ namespace Nebula.Caching.InMemory.CacheManager
                 AbsoluteExpirationRelativeToNow = expiration
             };
 
-            byte[] compressedData = GZipCompression.Compress(Encoding.UTF8.GetBytes(value));
+            byte[] compressedData = _gzipCompression.Compress(Encoding.UTF8.GetBytes(value));
 
             _memoryCache.Set(key, compressedData, cacheEntryOptions);
         }
