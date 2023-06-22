@@ -7,29 +7,43 @@ namespace Nebula.Caching.InMemory.Extensions.InMemoryExtensions
 {
     public static class InMemoryExtensions
     {
-        public static IServiceCollection AddInMemoryExtensions(this IServiceCollection services, InMemoryConfigurations configs)
+        public static IServiceCollection AddInMemoryExtensions(this IServiceCollection services, InMemoryConfigurations inMemoryConfigs)
         {
-            if (configs is null)
+            CreateDefaultInMemoryConfigurationsIfNull(inMemoryConfigs);
+            SetDefaultValuesBasedOnInMemoryConfigurations(inMemoryConfigs);
+            InjectInMemoryOptionsObject(services, inMemoryConfigs);
+
+            return services;
+        }
+
+        private static void CreateDefaultInMemoryConfigurationsIfNull(InMemoryConfigurations inMemoryConfigs)
+        {
+            if (inMemoryConfigs is null)
             {
-                configs = new InMemoryConfigurations
+                inMemoryConfigs = new InMemoryConfigurations
                 {
                     ConfigurationSection = "InMemory"
                 };
             }
+        }
 
-            CacheDurationConstants.DefaultCacheDurationInSeconds = configs.DefaultCacheDurationInSeconds;
+        private static void SetDefaultValuesBasedOnInMemoryConfigurations(InMemoryConfigurations inMemoryConfigs)
+        {
+            CacheDurationConstants.DefaultCacheDurationInSeconds = inMemoryConfigs.DefaultCacheDurationInSeconds;
 
-            CacheConfigurationConstants.ConfigurationSection = configs.ConfigurationSection;
+            CacheConfigurationConstants.ConfigurationSection = inMemoryConfigs.ConfigurationSection;
+        }
 
+        private static void InjectInMemoryOptionsObject(IServiceCollection services, InMemoryConfigurations inMemoryConfigs)
+        {
             services.AddSingleton<InMemoryOptions>(ctx =>
             {
                 var configuration = ctx.GetService<IConfiguration>();
-                var inMemoryOptions = configuration.GetSection(configs.ConfigurationSection).Get<InMemoryOptions>();
-                inMemoryOptions.ConfigurationRoot = configs.ConfigurationSection;
+                var inMemoryOptions = configuration.GetSection(inMemoryConfigs.ConfigurationSection).Get<InMemoryOptions>();
+                inMemoryOptions.ConfigurationRoot = inMemoryConfigs.ConfigurationSection;
                 return inMemoryOptions;
             });
-
-            return services;
         }
+
     }
 }
