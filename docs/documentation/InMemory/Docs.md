@@ -7,3 +7,7 @@ For a more in-depth understading of the cache registration process, please refer
 ## Using the caching attribute
 
 For a more in-depth understading on the usage of of the caching attribute, please refer to [this](AttributeUsage/AttributeUsage.md).
+
+## Memory considerations
+
+For some concerns regarding memory considerations, please refer to [this](MemoryConsiderations/MemoryConsiderations.md).
