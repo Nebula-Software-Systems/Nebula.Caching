@@ -13,18 +13,20 @@ As of today, we only support caching using Redis, but in the future we hope to s
 
 ## Nuget Package
 
-| Name                 | Released Package                                                                                                                                                  |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Nebula-Caching-Redis | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching-Redis?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching-Redis/) |
+| Name                    | Released Package                                                                                                                                                        |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nebula-Caching-Redis    | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching-Redis?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching-Redis/)       |
+| Nebula-Caching-InMemory | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching-InMemory?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching-InMemory/) |
 
 ## Usage
 
-### Step 1 : Install the package
+### Step 1 : Install one of the available packages
 
 Install the package via Package Manager:
 
 ```
 Install-Package Nebula-Caching-Redis
+Install-Package Nebula-Caching-InMemory
 ```
 
 or
@@ -33,9 +35,10 @@ Via .NET CLI:
 
 ```
 dotnet add package Nebula-Caching-Redis
+dotnet add package Nebula-Caching-InMemory
 ```
 
-### Step 2 : Register cache usage in the Program class (will change depending on which caching provider you are using)
+### Step 2 : Register cache usage in the Program class (will change depending on which caching provider you are using, please refer to the package documentation)
 
 ```csharp
 
@@ -55,7 +58,7 @@ public class Program
 
 ```
 
-### Step 3 : Use the caching attribute in your interface definitions (will change depending on which caching provider you are using)
+### Step 3 : Use the caching attribute in your interface definitions (will change depending on which caching provider you are using, please refer to the package documentation)
 
 ```csharp
 
