@@ -165,4 +165,4 @@ An example of that can be seen below:
 
 Below you can find a screenshot of what could that custom cache key name look like in reality.
 
-![Screenshot of a cache key, displayed using a Redis Client called Another Redis Desktop Manager](../../media/cacheKeys/CustomCacheName.PNG)
+![Screenshot of a cache key, displayed using a Redis Client called Another Redis Desktop Manager](../../../media/cacheKeys/CustomCacheName.PNG)
