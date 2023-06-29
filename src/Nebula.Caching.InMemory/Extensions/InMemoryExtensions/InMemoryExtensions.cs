@@ -9,9 +9,29 @@ namespace Nebula.Caching.InMemory.Extensions.InMemoryExtensions
     {
         public static IServiceCollection AddInMemoryExtensions(this IServiceCollection services, InMemoryConfigurations inMemoryConfigs)
         {
-            CreateDefaultInMemoryConfigurationsIfNull(inMemoryConfigs);
-            SetDefaultValuesBasedOnInMemoryConfigurations(inMemoryConfigs);
-            InjectInMemoryOptionsObject(services, inMemoryConfigs);
+            // CreateDefaultInMemoryConfigurationsIfNull(inMemoryConfigs);
+            // SetDefaultValuesBasedOnInMemoryConfigurations(inMemoryConfigs);
+            // InjectInMemoryOptionsObject(services, inMemoryConfigs);
+
+            if (inMemoryConfigs is null)
+            {
+                inMemoryConfigs = new InMemoryConfigurations
+                {
+                    ConfigurationSection = "InMemory"
+                };
+            }
+
+            CacheDurationConstants.DefaultCacheDurationInSeconds = inMemoryConfigs.DefaultCacheDurationInSeconds;
+
+            CacheConfigurationConstants.ConfigurationSection = inMemoryConfigs.ConfigurationSection;
+
+            services.AddSingleton<InMemoryOptions>(ctx =>
+            {
+                var configuration = ctx.GetService<IConfiguration>();
+                var inMemoryOptions = configuration.GetSection(inMemoryConfigs.ConfigurationSection).Get<InMemoryOptions>();
+                inMemoryOptions.ConfigurationRoot = inMemoryConfigs.ConfigurationSection;
+                return inMemoryOptions;
+            });
 
             return services;
         }
