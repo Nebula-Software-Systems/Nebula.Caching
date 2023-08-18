@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Caching.Memcached", "Nebula.Caching.Memcached.csproj", "{3F64B92D-CDFD-42AF-B3F9-CC9688A06CA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Caching.Memcached", "Nebula.Caching.MemCached.csproj", "{3F64B92D-CDFD-42AF-B3F9-CC9688A06CA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Caching.Common", "..\Nebula.Caching.Common\Nebula.Caching.Common.csproj", "{FF8B9509-C051-4628-A464-478C0F6DDAF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{3F64B92D-CDFD-42AF-B3F9-CC9688A06CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F64B92D-CDFD-42AF-B3F9-CC9688A06CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F64B92D-CDFD-42AF-B3F9-CC9688A06CA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF8B9509-C051-4628-A464-478C0F6DDAF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF8B9509-C051-4628-A464-478C0F6DDAF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF8B9509-C051-4628-A464-478C0F6DDAF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF8B9509-C051-4628-A464-478C0F6DDAF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

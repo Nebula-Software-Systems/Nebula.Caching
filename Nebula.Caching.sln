@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Caching.Redis", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Caching.InMemory", "src\Nebula.Caching.InMemory\Nebula.Caching.InMemory.csproj", "{D77EA6CF-7825-458A-B32E-D7481644627D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Caching.Memcached", "src\Nebula.Caching.Memcached\Nebula.Caching.Memcached.csproj", "{87A9C41A-B5F3-41FB-A5B0-B8A49BA7A2AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,10 +34,15 @@ Global
 		{D77EA6CF-7825-458A-B32E-D7481644627D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D77EA6CF-7825-458A-B32E-D7481644627D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D77EA6CF-7825-458A-B32E-D7481644627D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87A9C41A-B5F3-41FB-A5B0-B8A49BA7A2AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87A9C41A-B5F3-41FB-A5B0-B8A49BA7A2AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87A9C41A-B5F3-41FB-A5B0-B8A49BA7A2AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87A9C41A-B5F3-41FB-A5B0-B8A49BA7A2AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DDB9C8EA-96AA-4EAE-AF56-7B4897CA4EE7} = {F0265230-4219-46CB-8FCC-A946BC6447CA}
 		{847F1E55-A4CF-4633-A322-9B08DADE7B30} = {F0265230-4219-46CB-8FCC-A946BC6447CA}
 		{D77EA6CF-7825-458A-B32E-D7481644627D} = {F0265230-4219-46CB-8FCC-A946BC6447CA}
+		{87A9C41A-B5F3-41FB-A5B0-B8A49BA7A2AE} = {F0265230-4219-46CB-8FCC-A946BC6447CA}
 	EndGlobalSection
 EndGlobal

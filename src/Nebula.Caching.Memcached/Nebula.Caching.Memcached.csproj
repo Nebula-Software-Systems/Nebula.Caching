@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EnyimMemcachedCore" Version="2.6.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Nebula.Caching.Common\Nebula.Caching.Common.csproj" />
   </ItemGroup>
 
