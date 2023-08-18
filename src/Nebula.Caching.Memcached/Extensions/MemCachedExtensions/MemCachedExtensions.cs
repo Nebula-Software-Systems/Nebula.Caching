@@ -12,7 +12,7 @@ namespace Nebula.Caching.MemCached.Extensions.RedisExtensions
         {
             CacheDurationConstants.DefaultCacheDurationInSeconds = configs.DefaultCacheDurationInSeconds;
 
-            CacheConfigurationConstants.ConfigurationSection = "MemCachedConfig";
+            CacheConfigurationConstants.ConfigurationSection = configs.ConfigurationSection;
 
             services.AddSingleton<MemCachedOptions>(ctx =>
             {
