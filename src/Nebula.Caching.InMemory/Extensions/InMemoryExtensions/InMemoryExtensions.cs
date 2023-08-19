@@ -7,7 +7,7 @@ namespace Nebula.Caching.InMemory.Extensions.InMemoryExtensions
 {
     public static class InMemoryExtensions
     {
-        public static IServiceCollection AddInMemoryExtensions(this IServiceCollection services, InMemoryConfigurations inMemoryConfigs)
+        public static IServiceCollection AddInMemoryExtensions(this IServiceCollection services, InMemoryConfigurations? inMemoryConfigs)
         {
             // CreateDefaultInMemoryConfigurationsIfNull(inMemoryConfigs);
             // SetDefaultValuesBasedOnInMemoryConfigurations(inMemoryConfigs);

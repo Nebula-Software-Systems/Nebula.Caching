@@ -22,11 +22,17 @@ namespace Nebula.Caching.MemCached.Extensions.RedisExtensions
                 return memCachedOptions;
             });
 
-            services.AddLogging();
-
-            services.AddEnyimMemcached(o => o.Servers = new List<Server> { new Server { Address = "localhost", Port = 11211 } });
+            SetupMemCache(services);
 
             return services;
+        }
+
+        private static void SetupMemCache(IServiceCollection services)
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            var memCachedOptions = serviceProvider.GetRequiredService<MemCachedOptions>();
+            var memCacheServerSplit = memCachedOptions.CacheServiceUrl.Split(':');
+            services.AddEnyimMemcached(o => o.Servers = new List<Server> { new Server { Address = memCacheServerSplit[0], Port = Int32.Parse(memCacheServerSplit[1]) } });
         }
 
     }

@@ -9,7 +9,7 @@ namespace Nebula.Caching.InMemory.Extensions
 {
     public static class Extensions
     {
-        public static IServiceCollection AddInMemoryChache(this IServiceCollection services, InMemoryConfigurations configs = null)
+        public static IServiceCollection AddInMemoryChache(this IServiceCollection services, InMemoryConfigurations? configs = null)
         {
             return services
                         .AddInMemoryInterceptor()
