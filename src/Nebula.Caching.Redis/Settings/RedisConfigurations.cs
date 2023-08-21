@@ -6,7 +6,7 @@ namespace Nebula.Caching.Redis.Settings
 {
     public class RedisConfigurations : Configurations
     {
-        public RedisConfigurationFlavour ConfigurationFlavour { get; set; }
+        public RedisConfigurationFlavour ConfigurationFlavour { get; init; }
         public Action<ConfigurationOptions>? Configure { get; set; }
         public ConfigurationOptions? Configuration { get; set; }
         public TextWriter? Log { get; set; }
