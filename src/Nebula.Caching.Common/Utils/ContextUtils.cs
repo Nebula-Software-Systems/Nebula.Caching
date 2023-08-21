@@ -76,7 +76,7 @@ namespace Nebula.Caching.Common.Utils
             ArgumentNullException.ThrowIfNull(key);
 
             var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, context.ServiceMethod, GenerateParamsFromParamCollection(context.GetParameters())));
-            var cacheExpiration = _baseOptions.CacheSettings.GetValueOrDefault(convertedKey);
+            _baseOptions.CacheSettings.TryGetValue(convertedKey, out TimeSpan cacheExpiration);
 
             if (IsCacheExpirationValid(cacheExpiration))
             {
@@ -108,7 +108,7 @@ namespace Nebula.Caching.Common.Utils
 
         public int RetrieveCacheExpirationFromCacheGroup(string cacheGroup)
         {
-            var cacheExpiration = _baseOptions.CacheGroupSettings.GetValueOrDefault(cacheGroup);
+            _baseOptions.CacheGroupSettings.TryGetValue(cacheGroup, out TimeSpan cacheExpiration);
 
             if (IsCacheExpirationValid(cacheExpiration))
             {
