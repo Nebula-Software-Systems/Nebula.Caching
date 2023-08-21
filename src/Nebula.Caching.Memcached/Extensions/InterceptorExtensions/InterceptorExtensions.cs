@@ -2,11 +2,9 @@ using AspectCore.Configuration;
 using AspectCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Memcached.Interceptors;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Nebula.Caching.MemCached.Extensions.InterceptorExtensions
 {
-    [ExcludeFromCodeCoverage]
     public static class InterceptorExtensions
     {
         public static IServiceCollection AddMemCachedInterceptor(this IServiceCollection services)

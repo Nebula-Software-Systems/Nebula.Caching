@@ -13,9 +13,8 @@ namespace Nebula.Caching.InMemory.UtilsExtensions
         {
             services.AddScoped<IContextUtils>(serviceProvider =>
             {
-                var configuration = serviceProvider.GetService<IConfiguration>();
                 var inMemoryOptions = serviceProvider.GetService<InMemoryOptions>();
-                return new ContextUtils(new InMemoryKeyManager(), configuration, inMemoryOptions);
+                return new ContextUtils(new InMemoryKeyManager(), inMemoryOptions);
             });
 
             services.AddScoped<GZipCompression>();

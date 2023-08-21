@@ -1,7 +1,6 @@
 using AspectCore.DynamicProxy;
 using AspectCore.DynamicProxy.Parameters;
 using Common.Settings;
-using Microsoft.Extensions.Configuration;
 using Nebula.Caching.Common.Attributes;
 using Nebula.Caching.Common.KeyManager;
 using System.Reflection;
@@ -12,13 +11,11 @@ namespace Nebula.Caching.Common.Utils
     {
 
         private IKeyManager _keyManager;
-        private IConfiguration _configuration;
         private BaseOptions _baseOptions;
 
-        public ContextUtils(IKeyManager keyManager, IConfiguration configuration, BaseOptions baseOptions)
+        public ContextUtils(IKeyManager keyManager, BaseOptions baseOptions)
         {
             _keyManager = keyManager;
-            _configuration = configuration;
             _baseOptions = baseOptions;
         }
 
