@@ -1,12 +1,10 @@
-using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 using Common.Settings;
 
 namespace Redis.Settings
 {
-    [ExcludeFromCodeCoverage]
     public class RedisOptions : BaseOptions
     {
+        public string CacheServiceUrl { get; init; } = "";
         public override string ConfigurationRoot { get; set; } = "Redis";
     }
 }

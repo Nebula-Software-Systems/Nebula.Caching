@@ -1,22 +1,23 @@
 using AspectCore.Configuration;
 using AspectCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Nebula.Caching.Redis.Interceptors;
+using Nebula.Caching.Memcached.Interceptors;
 
-namespace Redis.Extensions.InterceptorExtensions
+namespace Nebula.Caching.MemCached.Extensions.InterceptorExtensions
 {
     public static class InterceptorExtensions
     {
-        public static IServiceCollection AddRedisInterceptor(this IServiceCollection services)
+        public static IServiceCollection AddMemCachedInterceptor(this IServiceCollection services)
         {
-            services.AddSingleton<RedisCacheInterceptor>();
+            services.AddSingleton<MemCachedInterceptor>();
 
             services.ConfigureDynamicProxy(config =>
             {
                 config
                     .Interceptors
-                    .AddServiced<RedisCacheInterceptor>();
+                    .AddServiced<MemCachedInterceptor>();
             });
+
             return services;
         }
     }

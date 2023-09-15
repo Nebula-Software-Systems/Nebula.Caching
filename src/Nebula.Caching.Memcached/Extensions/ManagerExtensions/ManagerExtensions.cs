@@ -1,26 +1,26 @@
+using Enyim.Caching;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.CacheManager;
 using Nebula.Caching.Common.KeyManager;
-using Nebula.Caching.Redis.CacheManager;
-using Nebula.Caching.Redis.KeyManager;
-using StackExchange.Redis;
+using Nebula.Caching.Memcached.CacheManager;
+using Nebula.Caching.Memcached.KeyManager;
 
-namespace Redis.Extensions.ManagerExtensions
+namespace Nebula.Caching.MemCached.Extensions.ManagerExtensions
 {
     public static class ManagerExtensions
     {
-
         public static IServiceCollection AddManagerExtensions(this IServiceCollection services)
         {
+            var memCachedServer = services.BuildServiceProvider().GetService<IMemcachedClient>();
+
             services.AddScoped<ICacheManager>(serviceProvider =>
             {
-                var database = serviceProvider.GetService<IDatabase>();
-                return new RedisCacheManager(database);
+                return new MemCachedCacheManager(memCachedServer);
             });
 
             services.AddScoped<IKeyManager>(serviceProvider =>
             {
-                return new RedisKeyManager();
+                return new MemCachedKeyManager();
             });
 
             return services;
