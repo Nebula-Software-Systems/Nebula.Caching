@@ -13,10 +13,11 @@ As of today, we support caching using Redis and InMemory, but in the future we h
 
 ## Nuget Package
 
-| Name                    | Released Package                                                                                                                                                        |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Nebula-Caching-Redis    | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching-Redis?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching-Redis/)       |
-| Nebula-Caching-InMemory | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching-InMemory?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching-InMemory/) |
+| Name                     | Released Package                                                                                                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nebula-Caching-Redis     | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching-Redis?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching-Redis/)         |
+| Nebula-Caching-InMemory  | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching-InMemory?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching-InMemory/)   |
+| Nebula-Caching-Memcached | [![BotBuilder Badge](https://buildstats.info/nuget/Nebula-Caching-Memcached?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Nebula-Caching-Memcached/) |
 
 ## Usage
 
@@ -27,6 +28,7 @@ Install the package via Package Manager:
 ```
 Install-Package Nebula-Caching-Redis
 Install-Package Nebula-Caching-InMemory
+Install-Package Nebula-Caching-Memcached
 ```
 
 or
@@ -36,6 +38,7 @@ Via .NET CLI:
 ```
 dotnet add package Nebula-Caching-Redis
 dotnet add package Nebula-Caching-InMemory
+dotnet add package Nebula-Caching-Memcached
 ```
 
 ### Step 2 : Register cache usage in the Program class (will change depending on which caching provider you are using, please refer to the package documentation)
