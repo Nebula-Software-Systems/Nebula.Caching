@@ -54,7 +54,7 @@ Please check [this](../CacheRegistration/CacheRegistration.md) for more informat
 
 In an effort to make our interfaces more clean while still using custom cache duration, you can leave your cache attribute definition without specifying the cache duration, but that same cache duration comes from a configuration section of _appsettings.json_.
 
-When configuring your [cache usage](../CacheRegistration/CacheRegistration.md), you can specify a specific section from your _appsettings.json_ file where you are going to read all your cache configurations from. By default, the section name is **_RedisConfig_**.
+When configuring your [cache usage](../CacheRegistration/CacheRegistration.md), you can specify a specific section from your _appsettings.json_ file where you are going to read all your cache configurations from. By default, the section name is **_Redis_**.
 
 Under the section you defined above, create a new section called _CacheSettings_, where you are going to place the your cache duration.
 
