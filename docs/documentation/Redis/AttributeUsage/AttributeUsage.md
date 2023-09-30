@@ -65,7 +65,7 @@ The value for your cache duration should follow the _HH:MM:SS_ pattern, where HH
 Below you can find an example of how this could exist in your configuration:
 
 ```json
-  "RedisConfig": {
+  "Redis": {
     "CacheSettings": {
       "Gorold-Payment-Attributes-RedisStuff--AnotherMethod": "01:15:30",
       "Gorold-Payment-Attributes-RedisStuff--SomeMethod--{param1}--{param2}--{name}": "00:20:00"
@@ -101,7 +101,7 @@ So, this are the cache values taken:
 
 Sometimes you may have the need to give a group of caches the same duration, because there might be some logical grouping that you want to have. For this case, we have created cache groups.
 
-Cache groups allow you to specify, in your attribute definition, the cache group it belongs. That is done via the _CacheGroup_ property. There must be a corresponding configuration section under your cache root configuration section (as we saw before, _RedisConfig_ was the default for that) that indicates the duration for that cache group; that should be in a section called _CacheGroupSettings_ under your root one. The duration time specificied should follow the pattern spoken about earlier, meaning following the _HH:MM:SS_ pattern
+Cache groups allow you to specify, in your attribute definition, the cache group it belongs. That is done via the _CacheGroup_ property. There must be a corresponding configuration section under your cache root configuration section (as we saw before, _Redis_ was the default for that) that indicates the duration for that cache group; that should be in a section called _CacheGroupSettings_ under your root one. The duration time specificied should follow the pattern spoken about earlier, meaning following the _HH:MM:SS_ pattern
 
 Below you can find an example of cache groups in pratice, which puts the cache created on the method _SomeMethod_ inside a cache group called _GroupA_ and, according to this group's cache configuration, the cache will have a duration of 2 hours 23 minutes and 15 seconds.
 
@@ -120,7 +120,7 @@ Below you can find an example of cache groups in pratice, which puts the cache c
 ### Configuration definition of cache group
 
 ```json
-  "RedisConfig": {
+  "Redis": {
     "CacheGroupSettings": {
       "GroupA" : "02:23:15"
     }
@@ -152,7 +152,7 @@ An example of that can be seen below:
 ### Configuration definition of our cache duration based on our custom cache key name
 
 ```json
-  "RedisConfig": {
+  "Redis": {
     "CacheGroupSettings": {
       "MyCustomCacheName" : "04:00:00"
     }
