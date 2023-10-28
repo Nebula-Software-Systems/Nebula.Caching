@@ -11,7 +11,7 @@ public class Program
       // ...
 
       builder.Host.UseNebulaCaching();
-      builder.Services.AddRedisChache(new Configurations
+      builder.Services.AddRedisChache(new RedisConfigurations
       {
         //some amazing configuration options
       });
@@ -112,7 +112,7 @@ public class Program
     {
       // ...
         builder.Host.UseNebulaCaching();
-        builder.Services.AddRedisChache(new Configurations
+        builder.Services.AddRedisChache(new RedisConfigurations
         {
             ConfigurationSection = "RedisConfig",
             ConfigurationFlavour = RedisConfigurationFlavour.Vanilla,

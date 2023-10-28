@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageId>Nebula-Caching-Redis</PackageId>
-    <Version>1.0.0</Version>
+    <PackageId>NebulaCaching.Redis</PackageId>
+    <Version>0.1.0</Version>
     <Authors>Rafael Camara</Authors>
     <Company>Nebula Software Systems</Company>
     <PackageDescription>Make your dotnet core apps shine by using caching without cluttering your projects.</PackageDescription>
@@ -15,12 +15,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NebulaCaching.Common" Version="0.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="tests\" />
+    <None Remove="tests\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="tests\" />
+    <Compile Remove="tests\**" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nebula.Caching.Common\Nebula.Caching.Common.csproj" />
+    <EmbeddedResource Remove="tests\**" />
   </ItemGroup>
 </Project>
