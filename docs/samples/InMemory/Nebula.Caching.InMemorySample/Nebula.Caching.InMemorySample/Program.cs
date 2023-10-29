@@ -1,25 +1,44 @@
-var builder = WebApplication.CreateBuilder(args);
+using Nebula.Caching.Common.Extensions;
+using Nebula.Caching.InMemory.Extensions;
+using Nebula.Caching.InMemory.Settings;
+using Nebula.Caching.InMemorySample.Interfaces;
+using Nebula.Caching.InMemorySample.Services;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Start cache configuration
+        builder.Host.UseNebulaCaching();
+        builder.Services.AddInMemoryChache(new InMemoryConfigurations
+        {
+            ConfigurationSection = "InMemoryConfig",
+            DefaultCacheDurationInSeconds = 3600
+        });
+        // End cache configuration
+        
+        builder.Services.AddScoped<IService, ServiceImplementation>();
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        var app = builder.Build();
+        
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

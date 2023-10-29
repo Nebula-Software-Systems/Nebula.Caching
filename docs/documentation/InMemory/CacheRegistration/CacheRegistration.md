@@ -11,7 +11,7 @@ public class Program
       // ...
 
       builder.Host.UseNebulaCaching();
-      builder.Services.AddInMemoryChache(new Configurations
+      builder.Services.AddInMemoryChache(new InMemoryConfigurations
       {
         //some amazing optional configuration options
       });
@@ -26,7 +26,7 @@ The following options are, as of today, supported:
 
 ## ConfigurationSection
 
-String that represents the section in your _appsettings.json_ where the cache configuration will be placed. By default the value here is **_"InMemory"_**.Example of configurations placed in such section may include the cache duration for your keys (if you end up choosing this path). Please refer to [this](../AttributeUsage/AttributeUsage.md) for more information on cache duration options.
+String that represents the section in your _appsettings.json_ where the cache configuration will be placed. By default the value here is **_"InMemory"_**. Example of configurations placed in such section may include the cache duration for your keys (if you end up choosing this path). Please refer to [this](../AttributeUsage/AttributeUsage.md) for more information on cache duration options.
 
 ## DefaultCacheDurationInSeconds
 

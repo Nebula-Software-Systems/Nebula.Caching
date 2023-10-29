@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Nebula.Caching.InMemorySample.Interfaces;
 
 namespace Nebula.Caching.InMemorySample.Controllers;
 
@@ -13,14 +14,22 @@ public class WeatherForecastController : ControllerBase
 
     private readonly ILogger<WeatherForecastController> _logger;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    private readonly IService _service;
+
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IService service)
     {
         _logger = logger;
+        _service = service;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
+        _service.MagicMethod();
+        _service.AnotherMethod("Rafael");
+        _service.OneMethod("Rafael", 1996);
+        _service.SomeMethod();
+        
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
