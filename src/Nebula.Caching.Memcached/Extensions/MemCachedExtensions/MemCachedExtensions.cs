@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.Constants;
 using Nebula.Caching.MemCached.Settings;
 
-namespace Nebula.Caching.MemCached.Extensions.RedisExtensions
+namespace Nebula.Caching.MemCached.Extensions.MemCachedExtensions
 {
     public static class MemCachedExtensions
     {

@@ -11,7 +11,7 @@ public class Program
       // ...
 s
       builder.Host.UseNebulaCaching();
-      builder.Services.AddMemCachedChache(new Configurations
+      builder.Services.AddMemCachedChache(new MemCachedConfigurations
       {
         //some amazing configuration options
       });
@@ -26,7 +26,7 @@ The following options are, as of today, supported:
 
 ## ConfigurationSection
 
-String that represents the section in your _appsettings.json_ where the cache configuration will be placed. By default the value here is **_"MemCached"_**.Example of configurations placed in such section may include the cache duration for your keys (if you end up choosing this path). Please refer to [this](../AttributeUsage/AttributeUsage.md) for more information on cache duration options.
+String that represents the section in your _appsettings.json_ where the cache configuration will be placed. By default the value here is **_"MemCached"_**. Example of configurations placed in such section may include the cache duration for your keys (if you end up choosing this path). Please refer to [this](../AttributeUsage/AttributeUsage.md) for more information on cache duration options.
 
 ## DefaultCacheDurationInSeconds
 
@@ -40,7 +40,9 @@ Again, please refer to [this](../AttributeUsage/AttributeUsage.md) for more info
 
 ## Example of a cache registration
 
-Below you can find an example of what the cache registration could look like in your _Program.cs_ class, having all we discussed in consideration:
+Below you can find an example of what the cache registration could look like in your _Program.cs_ class, having all we discussed in consideration.
+
+For our cache service registration to properly work, you need to have in your configuration section the connection string where your MemCached service is hosted. You need to place it under the configuration key _CacheServiceUrl_, which is where our software will read from to reach your MemCached service. Please note that you need to include the port as well on the connection string.
 
 ```csharp
 
@@ -50,7 +52,7 @@ public class Program
     {
       // ...
         builder.Host.UseNebulaCaching();
-        builder.Services.AddMemCachedChache(new Configurations
+        builder.Services.AddMemCachedChache(new MemCachedConfigurations
         {
             ConfigurationSection = "MemCachedConfig",
             DefaultCacheDurationInSeconds = 120
@@ -63,7 +65,7 @@ public class Program
 ```json
 
 "MemCachedConfig": {
-    "CacheServiceUrl" : "localhost",
+    "CacheServiceUrl" : "localhost:11211",
     "CacheSettings" : {
       // our cache duration configuration
     }

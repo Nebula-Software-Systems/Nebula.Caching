@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.MemCached.Extensions.InterceptorExtensions;
 using Nebula.Caching.MemCached.Extensions.ManagerExtensions;
-using Nebula.Caching.MemCached.Extensions.RedisExtensions;
+using Nebula.Caching.MemCached.Extensions.MemCachedExtensions;
 using Nebula.Caching.MemCached.Extensions.UtilsExtensions;
 using Nebula.Caching.MemCached.Settings;
 
