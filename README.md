@@ -15,9 +15,9 @@ As of today, we support caching using Redis, InMemory and Memcached, but in the 
 
 | Name                     | Released Package                                                                                                                                                          |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| NebulaCaching.Redis     | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.Redis?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Caching.Nebula.Redis/)         |
-| NebulaCaching.InMemory  | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.InMemory?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Caching.Nebula.InMemory)   |
-| NebulaCaching.Memcached | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.Memcached?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Caching.Nebula.Memcached/) |
+| NebulaCaching.Redis     | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.Redis?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/NebulaCaching.Redis/)         |
+| NebulaCaching.InMemory  | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.InMemory?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/NebulaCaching.InMemory)   |
+| NebulaCaching.Memcached | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.Memcached?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/NebulaCaching.Memcached/) |
 
 ## Usage
 
