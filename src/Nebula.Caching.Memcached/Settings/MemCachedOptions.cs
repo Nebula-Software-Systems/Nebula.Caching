@@ -4,7 +4,6 @@ namespace Nebula.Caching.MemCached.Settings
 {
     public class MemCachedOptions : BaseOptions
     {
-        public string CacheServiceUrl { get; init; } = "";
-        public override string ConfigurationRoot { get; set; } = "MemCached";
+        public string CacheServiceUrl { get; init; } = string.Empty;
     }
 }

@@ -4,7 +4,7 @@ namespace Nebula.Caching.Common.Settings
 {
     public class Configurations
     {
-        public string ConfigurationSection { get; init; } = CacheConfigurationConstants.ConfigurationSection;
-        public int DefaultCacheDurationInSeconds { get; init; } = CacheDurationConstants.DefaultCacheDurationInSeconds;
+        public virtual string ConfigurationSection { get; init; } = CacheConstants.DefaultConfigurationSection;
+        public int DefaultCacheDurationInSeconds { get; init; } = CacheConstants.DefaultCacheDurationInSeconds;
     }
 }

@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.Compression;
 using Nebula.Caching.Common.Utils;
@@ -17,7 +16,7 @@ namespace Nebula.Caching.InMemory.UtilsExtensions
                 return new ContextUtils(new InMemoryKeyManager(), inMemoryOptions);
             });
 
-            services.AddScoped<GZipCompression>();
+            services.AddScoped<ICompression, GZipCompression>();
 
             return services;
         }

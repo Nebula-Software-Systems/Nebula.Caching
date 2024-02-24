@@ -72,7 +72,7 @@ namespace Nebula.Caching.Memcached.Interceptors
 
         private async Task CacheValueAsync()
         {
-            string value = "";
+            string value;
 
             if (context.IsAsync())
             {

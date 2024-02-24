@@ -15,7 +15,6 @@ namespace Nebula.Caching.InMemory.Interceptors
         private AspectContext context { get; set; }
         private AspectDelegate next { get; set; }
 
-
         public InMemoryCacheInterceptor(IContextUtils utils, ICacheManager cacheManager, IKeyManager keyManager)
         {
             _cacheManager = cacheManager;
@@ -73,7 +72,7 @@ namespace Nebula.Caching.InMemory.Interceptors
 
         private async Task CacheValueAsync()
         {
-            string value = "";
+            string value;
 
             if (context.IsAsync())
             {

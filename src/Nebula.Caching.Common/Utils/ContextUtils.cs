@@ -27,24 +27,6 @@ namespace Nebula.Caching.Common.Utils
                                                 RetrieveCacheExpirationFromAttribute<T>(context);
         }
 
-        public bool CacheExistInConfiguration(string key, AspectContext context)
-        {
-            if (_baseOptions.CacheSettings is null) return false;
-
-            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, context.ServiceMethod, GenerateParamsFromParamCollection(context.GetParameters())));
-            return _baseOptions.CacheSettings.ContainsKey(convertedKey);
-        }
-
-        public MethodInfo GetExecutedMethodInfo(AspectContext context)
-        {
-            return context.ImplementationMethod;
-        }
-
-        public MethodInfo GetServiceMethodInfo(AspectContext context)
-        {
-            return context.ServiceMethod;
-        }
-
         public string[] GetMethodParameters(AspectContext context)
         {
             var methodParams = context.Parameters.Select((object obj) =>
@@ -63,12 +45,30 @@ namespace Nebula.Caching.Common.Utils
             return executedMethodAttribute is T;
         }
 
+        public MethodInfo GetExecutedMethodInfo(AspectContext context)
+        {
+            return context.ImplementationMethod;
+        }
+
+        public MethodInfo GetServiceMethodInfo(AspectContext context)
+        {
+            return context.ServiceMethod;
+        }
+
+        private bool CacheExistInConfiguration(string key, AspectContext context)
+        {
+            if (_baseOptions.CacheSettings is null) return false;
+
+            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, context.ServiceMethod, GenerateParamsFromParamCollection(context.GetParameters())));
+            return _baseOptions.CacheSettings.ContainsKey(convertedKey);
+        }
+
         public bool CacheConfigSectionExists()
         {
             return _baseOptions.CacheSettings != null;
         }
 
-        public int RetrieveCacheExpirationFromConfig(string key, AspectContext context)
+        private int RetrieveCacheExpirationFromConfig(string key, AspectContext context)
         {
             ArgumentNullException.ThrowIfNull(key);
 
@@ -83,7 +83,7 @@ namespace Nebula.Caching.Common.Utils
             throw new InvalidOperationException($"Cache key {key} either doesn't exist on the configuration or if exist has an invalid value for its duration. Cache duration should be greater than zero.");
         }
 
-        public int RetrieveCacheExpirationFromAttribute<T>(AspectContext context) where T : BaseAttribute
+        private int RetrieveCacheExpirationFromAttribute<T>(AspectContext context) where T : BaseAttribute
         {
             var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
                                                 .FirstOrDefault(
@@ -98,12 +98,12 @@ namespace Nebula.Caching.Common.Utils
                                                                                     castedExecutedMethodAttribute.CacheDurationInSeconds;
         }
 
-        public bool IsCacheGroupDefined(BaseAttribute attribute)
+        private bool IsCacheGroupDefined(BaseAttribute attribute)
         {
-            return !String.IsNullOrEmpty(attribute.CacheGroup);
+            return !string.IsNullOrEmpty(attribute.CacheGroup);
         }
 
-        public int RetrieveCacheExpirationFromCacheGroup(string cacheGroup)
+        private int RetrieveCacheExpirationFromCacheGroup(string cacheGroup)
         {
             _baseOptions.CacheGroupSettings.TryGetValue(cacheGroup, out TimeSpan cacheExpiration);
 
@@ -115,29 +115,28 @@ namespace Nebula.Caching.Common.Utils
             throw new InvalidOperationException($"Cache group {cacheGroup} either doesn't exist on the configuration or if exist has an invalid value for its duration. Cache duration should be greater than zero.");
         }
 
-        public bool IsCacheExpirationValid(TimeSpan? cacheExpiration)
+        private bool IsCacheExpirationValid(TimeSpan? cacheExpiration)
         {
             return cacheExpiration != null && cacheExpiration > TimeSpan.Zero;
         }
 
-        public string[] GenerateParamsFromParamCollection(ParameterCollection parameters)
+        private string[] GenerateParamsFromParamCollection(ParameterCollection parameters)
         {
             List<string> genericParamsList = new List<string>();
 
             foreach (var param in parameters)
             {
-                var genericParam = GenerateGeneriConfigCacheParameter(param.Name);
+                var genericParam = GenerateGenericConfigCacheParameter(param.Name);
                 genericParamsList.Add(genericParam);
             }
 
             return genericParamsList.ToArray();
         }
 
-        public string GenerateGeneriConfigCacheParameter(string parameter)
+        private string GenerateGenericConfigCacheParameter(string parameter)
         {
             ArgumentNullException.ThrowIfNull(parameter);
             return $"{{{parameter}}}";
         }
-
     }
 }

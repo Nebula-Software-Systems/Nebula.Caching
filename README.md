@@ -7,16 +7,16 @@
 
 ## About
 
-Nebula.Caching is an Open-Source caching library that allows you to use caching in your projects with minimal configuration.
+Nebula.Caching is an Open-Source caching library that allows you to use cache-aside in your projects with minimal configuration.
 
 As of today, we support caching using Redis, InMemory and Memcached, but in the future we hope to support your favourite caching provider!
 
 ## Nuget Package
 
-| Name                     | Released Package                                                                                                                                                          |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name                    | Released Package                                                                                                                                                        |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | NebulaCaching.Redis     | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.Redis?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/NebulaCaching.Redis/)         |
-| NebulaCaching.InMemory  | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.InMemory?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/NebulaCaching.InMemory)   |
+| NebulaCaching.InMemory  | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.InMemory?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/NebulaCaching.InMemory)    |
 | NebulaCaching.Memcached | [![BotBuilder Badge](https://buildstats.info/nuget/NebulaCaching.Memcached?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/NebulaCaching.Memcached/) |
 
 ## Usage

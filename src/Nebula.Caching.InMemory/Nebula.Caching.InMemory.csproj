@@ -16,7 +16,10 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
-    <PackageReference Include="NebulaCaching.Common" Version="0.1.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Nebula.Caching.Common\Nebula.Caching.Common.csproj" />
   </ItemGroup>
 
 </Project>

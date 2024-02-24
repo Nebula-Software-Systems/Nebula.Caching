@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -14,18 +14,13 @@
     <RepositoryUrl>https://github.com/Nebula-Software-Systems/Nebula.Caching</RepositoryUrl>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NebulaCaching.Common" Version="0.1.0" />
+
+	<ItemGroup>
+		<PackageReference Include="StackExchange.Redis" Version="2.6.96" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <ProjectReference Include="..\Nebula.Caching.Common\Nebula.Caching.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="tests\" />
-    <None Remove="tests\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="tests\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="tests\**" />
-  </ItemGroup>
 </Project>

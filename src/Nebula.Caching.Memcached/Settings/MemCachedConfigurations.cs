@@ -4,6 +4,5 @@ namespace Nebula.Caching.MemCached.Settings
 {
     public class MemCachedConfigurations : Configurations
     {
-
     }
 }

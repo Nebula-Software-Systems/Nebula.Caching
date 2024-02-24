@@ -2,24 +2,24 @@ using Enyim.Caching.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.Constants;
+using Nebula.Caching.Memcached.Constants;
 using Nebula.Caching.MemCached.Settings;
 
 namespace Nebula.Caching.MemCached.Extensions.MemCachedExtensions
 {
     public static class MemCachedExtensions
     {
-        public static IServiceCollection AddMemCachedExtensions(this IServiceCollection services, MemCachedConfigurations configs)
+        public static IServiceCollection AddMemCachedExtensions(this IServiceCollection services, MemCachedConfigurations? memcachedConfigs)
         {
-            CacheDurationConstants.DefaultCacheDurationInSeconds = configs.DefaultCacheDurationInSeconds;
+            if (memcachedConfigs is null)
+                memcachedConfigs = new();
 
-            CacheConfigurationConstants.ConfigurationSection = configs.ConfigurationSection;
+            CacheConstants.DefaultCacheDurationInSeconds = memcachedConfigs.DefaultCacheDurationInSeconds;
 
-            services.AddSingleton<MemCachedOptions>(ctx =>
+            services.AddSingleton(ctx =>
             {
-                var configuration = ctx.GetService<IConfiguration>();
-                var memCachedOptions = configuration.GetSection(configs.ConfigurationSection).Get<MemCachedOptions>();
-                memCachedOptions.ConfigurationRoot = configs.ConfigurationSection;
-                return memCachedOptions;
+                var configuration = ctx.GetRequiredService<IConfiguration>();
+                return configuration.GetSection(memcachedConfigs.ConfigurationSection).Get<MemCachedOptions>();
             });
 
             SetupMemCache(services);
@@ -32,7 +32,16 @@ namespace Nebula.Caching.MemCached.Extensions.MemCachedExtensions
             var serviceProvider = services.BuildServiceProvider();
             var memCachedOptions = serviceProvider.GetRequiredService<MemCachedOptions>();
             var memCacheServerSplit = memCachedOptions.CacheServiceUrl.Split(':');
-            services.AddEnyimMemcached(o => o.Servers = new List<Server> { new Server { Address = memCacheServerSplit[0], Port = Int32.Parse(memCacheServerSplit[1]) } });
+            services.AddEnyimMemcached(
+                o => o.Servers = new List<Server> 
+                { 
+                    new Server 
+                    { 
+                        Address = memCacheServerSplit[0],
+                        Port = memCacheServerSplit[1] is null ? Constants.DefaultMemcachedPort : Int32.Parse(memCacheServerSplit[1]) 
+                    } 
+                }
+            );
         }
 
     }

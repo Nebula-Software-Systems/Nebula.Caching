@@ -9,51 +9,49 @@ namespace Redis.Extensions.RedisExtensions
 {
     public static class RedisExtensions
     {
-        public static IServiceCollection AddRedisExtensions(this IServiceCollection services, RedisConfigurations configs)
+        public static IServiceCollection AddRedisExtensions(this IServiceCollection services, RedisConfigurations? redisConfigs)
         {
-            CacheDurationConstants.DefaultCacheDurationInSeconds = configs.DefaultCacheDurationInSeconds;
+            if (redisConfigs is null)
+                redisConfigs = new();
 
-            CacheConfigurationConstants.ConfigurationSection = "RedisConfig";
+            CacheConstants.DefaultCacheDurationInSeconds = redisConfigs.DefaultCacheDurationInSeconds;
 
-            services.AddSingleton<RedisOptions>(ctx =>
+            services.AddSingleton(ctx =>
             {
-                var configuration = ctx.GetService<IConfiguration>();
-                var redisOptions = configuration.GetSection(configs.ConfigurationSection).Get<RedisOptions>();
-                redisOptions.ConfigurationRoot = configs.ConfigurationSection;
-                return redisOptions;
+                var configuration = ctx.GetRequiredService<IConfiguration>(); 
+                return configuration.GetSection(redisConfigs.ConfigurationSection).Get<RedisOptions>();
             });
 
-            if (configs.ConfigurationFlavour == RedisConfigurationFlavour.Vanilla)
+            if (redisConfigs.ConfigurationFlavour == RedisConfigurationFlavour.Vanilla)
             {
                 services.AddSingleton<IConnectionMultiplexer>(ctx =>
                 {
-                    var options = ctx.GetService<RedisOptions>();
-                    return ConnectionMultiplexer.Connect(options.CacheServiceUrl, configs.Log);
+                    var options = ctx.GetRequiredService<RedisOptions>();
+                    return ConnectionMultiplexer.Connect(options.CacheServiceUrl, redisConfigs.Log);
                 });
             }
-            else if (configs.ConfigurationFlavour == RedisConfigurationFlavour.Configured)
+            else if (redisConfigs.ConfigurationFlavour == RedisConfigurationFlavour.Configured)
             {
-                if (configs.Configuration != null)
+                if (redisConfigs.Configuration != null)
                 {
                     services.AddSingleton<IConnectionMultiplexer>(ctx =>
                     {
-                        return ConnectionMultiplexer.Connect(configs.Configuration, configs.Log);
+                        return ConnectionMultiplexer.Connect(redisConfigs.Configuration, redisConfigs.Log);
                     });
                 }
                 else
                 {
                     services.AddSingleton<IConnectionMultiplexer>(ctx =>
                     {
-                        var options = ctx.GetService<RedisOptions>();
-                        return ConnectionMultiplexer.Connect(options.CacheServiceUrl, configs.Configure, configs.Log);
+                        var options = ctx.GetRequiredService<RedisOptions>();
+                        return ConnectionMultiplexer.Connect(options.CacheServiceUrl, redisConfigs.Configure, redisConfigs.Log);
                     });
                 }
             }
 
-            services.AddSingleton<IDatabase>(serviceProvider =>
+            services.AddSingleton(serviceProvider =>
             {
-                var redis = serviceProvider.GetService<IConnectionMultiplexer>();
-                return redis.GetDatabase();
+                return serviceProvider.GetRequiredService<IConnectionMultiplexer>().GetDatabase();
             });
 
             return services;

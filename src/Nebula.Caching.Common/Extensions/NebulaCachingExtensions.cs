@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Nebula.Caching.Common.Extensions
 {
-    public static class Extensions
+    public static class NebulaCachingExtensions
     {
         public static IHostBuilder UseNebulaCaching(this IHostBuilder builderHost)
         {
