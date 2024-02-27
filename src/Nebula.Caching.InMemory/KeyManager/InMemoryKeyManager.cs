@@ -7,44 +7,53 @@ namespace Nebula.Caching.InMemory.KeyManager
 {
     public class InMemoryKeyManager : IKeyManager
     {
-        public string ConvertCacheKeyToConfigKey(string key)
+        public Task<string> ConvertCacheKeyToConfigKeyAsync(string key)
         {
-            ArgumentNullException.ThrowIfNull(key);
+            return Task.Run(() =>
+            {
+                ArgumentNullException.ThrowIfNull(key);
 
-            return (key.Replace(KeyConstants.MethodFullPathSeparator, KeyConstants.ConfigMethodFullPathSeparator))
-                    .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
+                return (key.Replace(KeyConstants.MethodFullPathSeparator, KeyConstants.ConfigMethodFullPathSeparator))
+                        .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
+            });
         }
 
-        public string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters)
+        public async Task<string> GenerateCacheKeyAsync(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters)
         {
             ArgumentNullException.ThrowIfNull(argument: parameters);
-            return HasCustomCacheNameDefined(serviceMethodInfo) ?
-                                                            GetCustomCacheName(serviceMethodInfo)
+            return await HasCustomCacheNameDefinedAsync(serviceMethodInfo) ?
+                                                            await GetCustomCacheNameAsync(serviceMethodInfo)
                                                             :
-                                                            GetDefaultCacheName(executedMethodInfo, parameters);
+                                                            await GetDefaultCacheNameAsync(executedMethodInfo, parameters);
         }
 
-        public bool HasCustomCacheNameDefined(MethodInfo methodInfo)
+        private async Task<bool> HasCustomCacheNameDefinedAsync(MethodInfo methodInfo)
         {
-            return GetCustomCacheName(methodInfo) is not null;
+            return await GetCustomCacheNameAsync(methodInfo) is not null;
         }
 
-        public string GetCustomCacheName(MethodInfo methodInfo)
+        private Task<string> GetCustomCacheNameAsync(MethodInfo methodInfo)
         {
-            var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
-                        .FirstOrDefault(
-                                            x => typeof(InMemoryCacheAttribute).IsAssignableFrom(x.GetType())
-                                        );
+            return Task.Run(() =>
+            {
+                var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
+            .FirstOrDefault(
+                                x => typeof(InMemoryCacheAttribute).IsAssignableFrom(x.GetType())
+                            );
 
-            var castedExecutedMethodAttribute = executedMethodAttribute as InMemoryCacheAttribute;
+                var castedExecutedMethodAttribute = executedMethodAttribute as InMemoryCacheAttribute;
 
-            return castedExecutedMethodAttribute.CustomCacheName;
+                return castedExecutedMethodAttribute.CustomCacheName;
+            });
         }
 
-        public string GetDefaultCacheName(MethodInfo methodInfo, string[] parameters)
+        private Task<string> GetDefaultCacheNameAsync(MethodInfo methodInfo, string[] parameters)
         {
-            string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
-            return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
+            return Task.Run(() =>
+            {
+                string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
+                return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
+            });
         }
     }
 }

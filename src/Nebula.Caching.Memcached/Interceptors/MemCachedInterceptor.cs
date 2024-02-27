@@ -26,16 +26,16 @@ namespace Nebula.Caching.Memcached.Interceptors
         {
             this.context = context;
             this.next = next;
-            if (ExecutedMethodHasMemCachedAttribute()) await ExecuteMethodThatHasMemCachedAttribute().ConfigureAwait(false);
-            else await ContinueExecutionForNonCacheableMethod().ConfigureAwait(false);
+            if (await ExecutedMethodHasMemCachedAttributeAsync()) await ExecuteMethodThatHasMemCachedAttributeAsync().ConfigureAwait(false);
+            else await ContinueExecutionForNonCacheableMethodAsync().ConfigureAwait(false);
         }
 
-        private bool ExecutedMethodHasMemCachedAttribute()
+        private async Task<bool> ExecutedMethodHasMemCachedAttributeAsync()
         {
-            return _utils.IsAttributeOfType<MemCachedCacheAttribute>(context);
+            return await _utils.IsAttributeOfTypeAsync<MemCachedCacheAttribute>(context);
         }
 
-        private async Task ExecuteMethodThatHasMemCachedAttribute()
+        private async Task ExecuteMethodThatHasMemCachedAttributeAsync()
         {
             if (await CacheExistsAsync().ConfigureAwait(false))
             {
@@ -48,14 +48,14 @@ namespace Nebula.Caching.Memcached.Interceptors
             }
         }
 
-        private async Task ContinueExecutionForNonCacheableMethod()
+        private async Task ContinueExecutionForNonCacheableMethodAsync()
         {
             await next(context).ConfigureAwait(false);
         }
 
         private async Task ReturnCachedValueAsync()
         {
-            var value = await _cacheManager.GetAsync(GenerateKey()).ConfigureAwait(false);
+            var value = await _cacheManager.GetAsync(await GenerateKeyAsync()).ConfigureAwait(false);
 
             if (context.IsAsync())
             {
@@ -85,20 +85,21 @@ namespace Nebula.Caching.Memcached.Interceptors
                 value = JsonConvert.SerializeObject(returnValue);
             }
 
-            var key = GenerateKey();
-            var expiration = TimeSpan.FromSeconds(_utils.GetCacheDuration<MemCachedCacheAttribute>(key, context));
+            var key = await GenerateKeyAsync();
+
+            var expiration = TimeSpan.FromSeconds(await _utils.GetCacheDurationAsync<MemCachedCacheAttribute>(key, context));
 
             await _cacheManager.SetAsync(key, value, expiration).ConfigureAwait(false);
         }
 
         private async Task<bool> CacheExistsAsync()
         {
-            return await _cacheManager.CacheExistsAsync(GenerateKey()).ConfigureAwait(false);
+            return await _cacheManager.CacheExistsAsync(await GenerateKeyAsync()).ConfigureAwait(false);
         }
 
-        private string GenerateKey()
+        private async Task<string> GenerateKeyAsync()
         {
-            return _keyManager.GenerateKey(_utils.GetExecutedMethodInfo(context), _utils.GetServiceMethodInfo(context), _utils.GetMethodParameters(context));
+            return await _keyManager.GenerateCacheKeyAsync(await _utils.GetExecutedMethodInfoAsync(context), await _utils.GetServiceMethodInfoAsync(context), await _utils.GetMethodParametersAsync(context));
         }
     }
 }

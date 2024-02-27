@@ -11,71 +11,73 @@ namespace Nebula.Caching.Common.Utils
     {
 
         private IKeyManager _keyManager;
-        private BaseOptions _baseOptions;
+        private CacheBaseOptions _baseOptions;
 
-        public ContextUtils(IKeyManager keyManager, BaseOptions baseOptions)
+        public ContextUtils(IKeyManager keyManager, CacheBaseOptions baseOptions)
         {
             _keyManager = keyManager;
             _baseOptions = baseOptions;
         }
 
-        public int GetCacheDuration<T>(string key, AspectContext context) where T : BaseAttribute
+        public async Task<int> GetCacheDurationAsync<T>(string key, AspectContext context) where T : BaseAttribute
         {
-            return CacheExistInConfiguration(key, context) ?
-                                                RetrieveCacheExpirationFromConfig(key, context)
-                                                :
-                                                RetrieveCacheExpirationFromAttribute<T>(context);
+            return await CacheExistInConfigurationAsync(key, context) ?
+                                 await RetrieveCacheExpirationFromConfigAsync(key, context)
+                                :
+                                 await RetrieveCacheExpirationFromAttributeAsync<T>(context);
         }
 
-        public string[] GetMethodParameters(AspectContext context)
+        public Task<string[]> GetMethodParametersAsync(AspectContext context)
         {
-            var methodParams = context.Parameters.Select((object obj) =>
+            return Task.Run(() =>
             {
-                return obj.ToString();
-            }).ToArray();
-            return methodParams;
+                var methodParams = context.Parameters.Select((object obj) =>
+                {
+                    return obj.ToString();
+                }).ToArray();
+                return methodParams;
+            });
         }
 
-        public bool IsAttributeOfType<T>(AspectContext context) where T : BaseAttribute
+        public Task<bool> IsAttributeOfTypeAsync<T>(AspectContext context) where T : BaseAttribute
         {
-            var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
-                                                            .FirstOrDefault(
-                                                            x => typeof(T).IsAssignableFrom(x.GetType())
-                                                            );
-            return executedMethodAttribute is T;
+            return Task.Run(() =>
+            {
+                var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
+                                                .FirstOrDefault(
+                                                x => typeof(T).IsAssignableFrom(x.GetType())
+                                                );
+                return executedMethodAttribute is T;
+            });
         }
 
-        public MethodInfo GetExecutedMethodInfo(AspectContext context)
+        public Task<MethodInfo> GetExecutedMethodInfoAsync(AspectContext context)
         {
-            return context.ImplementationMethod;
+            return Task.Run(() => context.ImplementationMethod);
         }
 
-        public MethodInfo GetServiceMethodInfo(AspectContext context)
+        public Task<MethodInfo> GetServiceMethodInfoAsync(AspectContext context)
         {
-            return context.ServiceMethod;
+            return Task.Run(() => context.ServiceMethod);
         }
 
-        private bool CacheExistInConfiguration(string key, AspectContext context)
+        private async Task<bool> CacheExistInConfigurationAsync(string key, AspectContext context)
         {
             if (_baseOptions.CacheSettings is null) return false;
 
-            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, context.ServiceMethod, GenerateParamsFromParamCollection(context.GetParameters())));
+            var convertedKey = await _keyManager.ConvertCacheKeyToConfigKeyAsync(await _keyManager.GenerateCacheKeyAsync(context.ImplementationMethod, context.ServiceMethod, await GenerateParamsFromParamCollectionAsync(context.GetParameters())));
             return _baseOptions.CacheSettings.ContainsKey(convertedKey);
         }
 
-        public bool CacheConfigSectionExists()
-        {
-            return _baseOptions.CacheSettings != null;
-        }
 
-        private int RetrieveCacheExpirationFromConfig(string key, AspectContext context)
+        private async Task<int> RetrieveCacheExpirationFromConfigAsync(string key, AspectContext context)
         {
             ArgumentNullException.ThrowIfNull(key);
 
-            var convertedKey = _keyManager.ConvertCacheKeyToConfigKey(_keyManager.GenerateKey(context.ImplementationMethod, context.ServiceMethod, GenerateParamsFromParamCollection(context.GetParameters())));
+            var convertedKey = await _keyManager.ConvertCacheKeyToConfigKeyAsync(await _keyManager.GenerateCacheKeyAsync(context.ImplementationMethod, context.ServiceMethod, await GenerateParamsFromParamCollectionAsync(context.GetParameters())));
             _baseOptions.CacheSettings.TryGetValue(convertedKey, out TimeSpan cacheExpiration);
 
-            if (IsCacheExpirationValid(cacheExpiration))
+            if (await IsCacheExpirationValidAsync(cacheExpiration))
             {
                 return (int)cacheExpiration.TotalSeconds;
             }
@@ -83,7 +85,7 @@ namespace Nebula.Caching.Common.Utils
             throw new InvalidOperationException($"Cache key {key} either doesn't exist on the configuration or if exist has an invalid value for its duration. Cache duration should be greater than zero.");
         }
 
-        private int RetrieveCacheExpirationFromAttribute<T>(AspectContext context) where T : BaseAttribute
+        private async Task<int> RetrieveCacheExpirationFromAttributeAsync<T>(AspectContext context) where T : BaseAttribute
         {
             var executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
                                                 .FirstOrDefault(
@@ -92,22 +94,21 @@ namespace Nebula.Caching.Common.Utils
 
             var castedExecutedMethodAttribute = executedMethodAttribute as T;
 
-            return IsCacheGroupDefined(castedExecutedMethodAttribute) ?
-                                                                                    RetrieveCacheExpirationFromCacheGroup(castedExecutedMethodAttribute.CacheGroup)
-                                                                                    :
-                                                                                    castedExecutedMethodAttribute.CacheDurationInSeconds;
+            return await IsCacheGroupDefinedAsync(castedExecutedMethodAttribute) ? await RetrieveCacheExpirationFromCacheGroupAsync(castedExecutedMethodAttribute.CacheGroup)
+                                                                                   :
+                                                                                   castedExecutedMethodAttribute.CacheDurationInSeconds;
         }
 
-        private bool IsCacheGroupDefined(BaseAttribute attribute)
+        private Task<bool> IsCacheGroupDefinedAsync(BaseAttribute attribute)
         {
-            return !string.IsNullOrEmpty(attribute.CacheGroup);
+            return Task.Run(() => !string.IsNullOrEmpty(attribute.CacheGroup));
         }
 
-        private int RetrieveCacheExpirationFromCacheGroup(string cacheGroup)
+        private async Task<int> RetrieveCacheExpirationFromCacheGroupAsync(string cacheGroup)
         {
             _baseOptions.CacheGroupSettings.TryGetValue(cacheGroup, out TimeSpan cacheExpiration);
 
-            if (IsCacheExpirationValid(cacheExpiration))
+            if (await IsCacheExpirationValidAsync(cacheExpiration))
             {
                 return (int)cacheExpiration.TotalSeconds;
             }
@@ -115,28 +116,31 @@ namespace Nebula.Caching.Common.Utils
             throw new InvalidOperationException($"Cache group {cacheGroup} either doesn't exist on the configuration or if exist has an invalid value for its duration. Cache duration should be greater than zero.");
         }
 
-        private bool IsCacheExpirationValid(TimeSpan? cacheExpiration)
+        private Task<bool> IsCacheExpirationValidAsync(TimeSpan? cacheExpiration)
         {
-            return cacheExpiration != null && cacheExpiration > TimeSpan.Zero;
+            return Task.Run(() => cacheExpiration != null && cacheExpiration > TimeSpan.Zero);
         }
 
-        private string[] GenerateParamsFromParamCollection(ParameterCollection parameters)
+        private async Task<string[]> GenerateParamsFromParamCollectionAsync(ParameterCollection parameters)
         {
             List<string> genericParamsList = new List<string>();
 
             foreach (var param in parameters)
             {
-                var genericParam = GenerateGenericConfigCacheParameter(param.Name);
+                var genericParam = await GenerateGenericConfigCacheParameterAsync(param.Name);
                 genericParamsList.Add(genericParam);
             }
 
             return genericParamsList.ToArray();
         }
 
-        private string GenerateGenericConfigCacheParameter(string parameter)
+        private Task<string> GenerateGenericConfigCacheParameterAsync(string parameter)
         {
-            ArgumentNullException.ThrowIfNull(parameter);
-            return $"{{{parameter}}}";
+            return Task.Run(() =>
+            {
+                ArgumentNullException.ThrowIfNull(parameter);
+                return $"{{{parameter}}}";
+            });
         }
     }
 }

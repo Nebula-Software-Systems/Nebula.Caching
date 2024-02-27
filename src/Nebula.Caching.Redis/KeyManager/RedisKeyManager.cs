@@ -7,56 +7,62 @@ namespace Nebula.Caching.Redis.KeyManager
 {
     public class RedisKeyManager : IKeyManager
     {
-
-        public RedisKeyManager()
-        {
-
-        }
-
-        public string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters)
+        public async Task<string> GenerateCacheKeyAsync(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters)
         {
             ArgumentNullException.ThrowIfNull(argument: parameters);
-            return HasCustomCacheNameDefined(serviceMethodInfo) ?
-                                                            GetCustomCacheName(serviceMethodInfo)
+            return await HasCustomCacheNameDefinedAsync(serviceMethodInfo) ?
+                                                            await GetCustomCacheNameAsync(serviceMethodInfo)
                                                             :
-                                                            GetDefaultCacheName(executedMethodInfo, parameters);
+                                                            await GetDefaultCacheNameAsync(executedMethodInfo, parameters);
         }
 
-        public bool HasCustomCacheNameDefined(MethodInfo methodInfo)
+        public Task<string> ConvertCacheKeyToConfigKeyAsync(string key)
         {
-            var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
-                                    .FirstOrDefault(
-                                                        x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType())
-                                                    );
+            ArgumentNullException.ThrowIfNull(key);
 
-            var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
-            return castedExecutedMethodAttribute.CustomCacheName is not null;
+            return Task.Run(() =>
+            {
+                return (key.Replace(KeyConstants.MethodFullPathSeparator, KeyConstants.ConfigMethodFullPathSeparator))
+                        .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
+            });
         }
 
-        public string GetCustomCacheName(MethodInfo methodInfo)
+        private Task<bool> HasCustomCacheNameDefinedAsync(MethodInfo methodInfo)
         {
-            var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
+            return Task.Run(() =>
+            {
+                var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
                         .FirstOrDefault(
                                             x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType())
                                         );
 
-            var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
-
-            return castedExecutedMethodAttribute.CustomCacheName;
+                var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
+                return castedExecutedMethodAttribute.CustomCacheName is not null;
+            });
         }
 
-        public string GetDefaultCacheName(MethodInfo methodInfo, string[] parameters)
+        private Task<string> GetCustomCacheNameAsync(MethodInfo methodInfo)
         {
-            string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
-            return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
+            return Task.Run(() =>
+            {
+                var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
+            .FirstOrDefault(
+                                x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType())
+                            );
+
+                var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
+
+                return castedExecutedMethodAttribute.CustomCacheName;
+            });
         }
 
-        public string ConvertCacheKeyToConfigKey(string key)
+        private Task<string> GetDefaultCacheNameAsync(MethodInfo methodInfo, string[] parameters)
         {
-            ArgumentNullException.ThrowIfNull(key);
-
-            return (key.Replace(KeyConstants.MethodFullPathSeparator, KeyConstants.ConfigMethodFullPathSeparator))
-                    .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
+            return Task.Run(() =>
+            {
+                string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
+                return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
+            });
         }
     }
 }

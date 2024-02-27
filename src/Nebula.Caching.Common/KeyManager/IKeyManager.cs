@@ -4,7 +4,7 @@ namespace Nebula.Caching.Common.KeyManager
 {
     public interface IKeyManager
     {
-        string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters);
-        string ConvertCacheKeyToConfigKey(string key);
+        Task<string> GenerateCacheKeyAsync(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters);
+        Task<string> ConvertCacheKeyToConfigKeyAsync(string key);
     }
 }
