@@ -1,5 +1,5 @@
 <h1 align="center">
-  Nebula.Caching
+  NebulaCaching
 </h1>
 <p align="center">
   Make use of caching without any hassle.
@@ -7,7 +7,7 @@
 
 ## About
 
-Nebula.Caching is an Open-Source caching library that allows you to use cache-aside in your projects with minimal configuration.
+NebulaCaching is an Open-Source caching library that allows you to use cache-aside in your projects with minimal configuration.
 
 As of today, we support caching using Redis, InMemory and Memcached, but in the future we hope to support your favourite caching provider!
 
@@ -97,6 +97,6 @@ There are several ways you can contribute, namely:
 
 ## License
 
-Nebula.Caching is a free and open-source software licensed under the MIT License.
+NebulaCaching is a free and open-source software licensed under the MIT License.
 
 See [LICENSE](LICENSE) for more details.
