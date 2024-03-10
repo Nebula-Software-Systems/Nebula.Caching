@@ -12,8 +12,8 @@ namespace Nebula.Caching.Redis.Interceptors
         private ICacheManager _cacheManager { get; set; }
         private IKeyManager _keyManager { get; set; }
         private IContextUtils _utils { get; set; }
-        private AspectContext context { get; set; }
-        private AspectDelegate next { get; set; }
+        private AspectContext _context { get; set; }
+        private AspectDelegate _next { get; set; }
 
         public RedisCacheInterceptor(ICacheManager cacheManager, IKeyManager keyManager, IContextUtils utils)
         {
@@ -24,15 +24,15 @@ namespace Nebula.Caching.Redis.Interceptors
 
         public async override Task Invoke(AspectContext context, AspectDelegate next)
         {
-            this.context = context;
-            this.next = next;
+            _context = context;
+            _next = next;
             if (await ExecutedMethodHasRedisCacheAttributeAsync()) await ExecuteMethodThatHasRedisCacheAttributeAsync().ConfigureAwait(false);
             else await ContinueExecutionForNonCacheableMethodAsync().ConfigureAwait(false);
         }
 
         private async Task<bool> ExecutedMethodHasRedisCacheAttributeAsync()
         {
-            return await _utils.IsAttributeOfTypeAsync<RedisCacheAttribute>(context);
+            return await _utils.IsAttributeOfTypeAsync<RedisCacheAttribute>(_context);
         }
 
         private async Task ExecuteMethodThatHasRedisCacheAttributeAsync()
@@ -43,30 +43,30 @@ namespace Nebula.Caching.Redis.Interceptors
             }
             else
             {
-                await next(context).ConfigureAwait(false);
+                await _next(_context).ConfigureAwait(false);
                 await CacheValueAsync().ConfigureAwait(false);
             }
         }
 
         private async Task ContinueExecutionForNonCacheableMethodAsync()
         {
-            await next(context).ConfigureAwait(false);
+            await _next(_context).ConfigureAwait(false);
         }
 
         private async Task ReturnCachedValueAsync()
         {
             var value = await _cacheManager.GetAsync(await GenerateKeyAsync()).ConfigureAwait(false);
 
-            if (context.IsAsync())
+            if (_context.IsAsync())
             {
-                dynamic objectType = context.ServiceMethod.ReturnType.GetGenericArguments().First();
+                dynamic objectType = _context.ServiceMethod.ReturnType.GetGenericArguments().First();
                 dynamic deserializedObject = JsonConvert.DeserializeObject(value, objectType);
-                context.ReturnValue = Task.FromResult(deserializedObject);
+                _context.ReturnValue = Task.FromResult(deserializedObject);
             }
             else
             {
-                var objectType = context.ServiceMethod.ReturnType;
-                context.ReturnValue = JsonConvert.DeserializeObject(value, objectType);
+                var objectType = _context.ServiceMethod.ReturnType;
+                _context.ReturnValue = JsonConvert.DeserializeObject(value, objectType);
             }
         }
 
@@ -74,20 +74,20 @@ namespace Nebula.Caching.Redis.Interceptors
         {
             string value;
 
-            if (context.IsAsync())
+            if (_context.IsAsync())
             {
-                Type returnType = context.ReturnValue.GetType();
-                value = JsonConvert.SerializeObject(await context.UnwrapAsyncReturnValue().ConfigureAwait(false));
+                Type returnType = _context.ReturnValue.GetType();
+                value = JsonConvert.SerializeObject(await _context.UnwrapAsyncReturnValue().ConfigureAwait(false));
             }
             else
             {
-                var returnValue = context.ReturnValue;
+                var returnValue = _context.ReturnValue;
                 value = JsonConvert.SerializeObject(returnValue);
             }
 
             var key = await GenerateKeyAsync();
 
-            var expiration = TimeSpan.FromSeconds(await _utils.GetCacheDurationAsync<RedisCacheAttribute>(key, context));
+            var expiration = TimeSpan.FromSeconds(await _utils.GetCacheDurationAsync<RedisCacheAttribute>(key, _context));
 
             await _cacheManager.SetAsync(key, value, expiration).ConfigureAwait(false);
         }
@@ -99,7 +99,7 @@ namespace Nebula.Caching.Redis.Interceptors
 
         private async Task<string> GenerateKeyAsync()
         {
-            return await _keyManager.GenerateCacheKeyAsync(await _utils.GetExecutedMethodInfoAsync(context), await _utils.GetServiceMethodInfoAsync(context), await _utils.GetMethodParametersAsync(context));
+            return await _keyManager.GenerateCacheKeyAsync(await _utils.GetExecutedMethodInfoAsync(_context), await _utils.GetServiceMethodInfoAsync(_context), await _utils.GetMethodParametersAsync(_context));
         }
     }
 }
