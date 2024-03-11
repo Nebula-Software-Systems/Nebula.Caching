@@ -12,29 +12,6 @@ namespace Nebula.Caching.Redis.CacheManager
             _redis = redis;
         }
 
-        public bool CacheExists(string key)
-        {
-            ArgumentNullException.ThrowIfNull(key);
-
-            return _redis.StringGet(key) != RedisValue.Null;
-        }
-
-        public string Get(string key)
-        {
-            ArgumentNullException.ThrowIfNull(key);
-
-            return _redis.StringGet(key).ToString();
-        }
-
-        public void Set(string key, string value, TimeSpan expiration)
-        {
-            ArgumentNullException.ThrowIfNull(key);
-            ArgumentNullException.ThrowIfNull(value);
-            ArgumentNullException.ThrowIfNull(expiration);
-
-            _redis.StringSet(key, value, expiration);
-        }
-
         public async Task<bool> CacheExistsAsync(string key)
         {
             ArgumentNullException.ThrowIfNull(key);
