@@ -4,6 +4,5 @@ namespace Nebula.Caching.InMemory.Attributes
 {
     public class InMemoryCacheAttribute : BaseAttribute
     {
-
     }
 }

@@ -30,6 +30,7 @@ namespace Nebula.Caching.Redis.Interceptors
             else await ContinueExecutionForNonCacheableMethodAsync().ConfigureAwait(false);
         }
 
+        #region CacheInvocation
         private async Task<bool> ExecutedMethodHasRedisCacheAttributeAsync()
         {
             return await _utils.IsAttributeOfTypeAsync<RedisCacheAttribute>(_context);
@@ -101,5 +102,6 @@ namespace Nebula.Caching.Redis.Interceptors
         {
             return await _keyManager.GenerateCacheKeyAsync(await _utils.GetExecutedMethodInfoAsync(_context), await _utils.GetServiceMethodInfoAsync(_context), await _utils.GetMethodParametersAsync(_context));
         }
+        #endregion
     }
 }

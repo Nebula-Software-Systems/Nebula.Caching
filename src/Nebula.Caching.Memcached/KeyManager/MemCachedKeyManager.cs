@@ -27,6 +27,7 @@ namespace Nebula.Caching.Memcached.KeyManager
             });
         }
 
+        #region Utils
         private Task<bool> HasCustomCacheNameDefinedAsync(MethodInfo methodInfo)
         {
             return Task.Run(() =>
@@ -64,5 +65,6 @@ namespace Nebula.Caching.Memcached.KeyManager
                 return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
             });
         }
+        #endregion
     }
 }

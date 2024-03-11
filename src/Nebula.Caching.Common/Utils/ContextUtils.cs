@@ -51,6 +51,8 @@ namespace Nebula.Caching.Common.Utils
             });
         }
 
+
+        #region Utils
         public Task<MethodInfo> GetExecutedMethodInfoAsync(AspectContext context)
         {
             return Task.Run(() => context.ImplementationMethod);
@@ -142,5 +144,6 @@ namespace Nebula.Caching.Common.Utils
                 return $"{{{parameter}}}";
             });
         }
+        #endregion
     }
 }

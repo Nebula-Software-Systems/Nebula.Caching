@@ -27,6 +27,7 @@ namespace Nebula.Caching.InMemory.KeyManager
                                                             await GetDefaultCacheNameAsync(executedMethodInfo, parameters);
         }
 
+        #region Utils
         private async Task<bool> HasCustomCacheNameDefinedAsync(MethodInfo methodInfo)
         {
             return await GetCustomCacheNameAsync(methodInfo) is not null;
@@ -55,5 +56,6 @@ namespace Nebula.Caching.InMemory.KeyManager
                 return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
             });
         }
+        #endregion
     }
 }

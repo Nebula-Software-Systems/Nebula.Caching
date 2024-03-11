@@ -30,6 +30,7 @@ namespace Nebula.Caching.InMemory.Interceptors
             else await ContinueExecutionForNonCacheableMethodAsync().ConfigureAwait(false);
         }
 
+        #region CacheInvocation
         private async Task<bool> ExecutedMethodHasInMemoryCacheAttributeAsync()
         {
             return await _utils.IsAttributeOfTypeAsync<InMemoryCacheAttribute>(_context);
@@ -100,5 +101,6 @@ namespace Nebula.Caching.InMemory.Interceptors
         {
             return await _keyManager.GenerateCacheKeyAsync(await _utils.GetExecutedMethodInfoAsync(_context), await _utils.GetServiceMethodInfoAsync(_context), await _utils.GetMethodParametersAsync(_context));
         }
+        #endregion
     }
 }

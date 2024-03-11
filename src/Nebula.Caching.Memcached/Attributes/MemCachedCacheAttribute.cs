@@ -4,6 +4,5 @@ namespace Nebula.Caching.Memcached.Attributes
 {
     public class MemCachedCacheAttribute : BaseAttribute
     {
-
     }
 }
