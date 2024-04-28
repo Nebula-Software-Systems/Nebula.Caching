@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EnyimMemcachedCore" Version="2.6.6" />
+    <PackageReference Include="EnyimMemcachedCore" Version="3.2.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="NebulaCaching.Common" Version="0.1.0" />
   </ItemGroup>
