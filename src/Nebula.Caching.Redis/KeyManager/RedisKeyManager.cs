@@ -1,68 +1,53 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using AspectCore.DynamicProxy;
-using AspectCore.DynamicProxy.Parameters;
 using Nebula.Caching.Common.Constants;
 using Nebula.Caching.Common.KeyManager;
 using Nebula.Caching.Redis.Attributes;
 
-namespace Nebula.Caching.Redis.KeyManager
+namespace Nebula.Caching.Redis.KeyManager;
+
+public class RedisKeyManager : IKeyManager
 {
-    public class RedisKeyManager : IKeyManager
+    public string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters)
     {
+        ArgumentNullException.ThrowIfNull(argument: parameters);
+        return HasCustomCacheNameDefined(serviceMethodInfo) ?
+            GetCustomCacheName(serviceMethodInfo)
+            :
+            GetDefaultCacheName(executedMethodInfo, parameters);
+    }
 
-        public RedisKeyManager()
-        {
+    private static bool HasCustomCacheNameDefined(MethodInfo methodInfo)
+    {
+        object? executedMethodAttribute = methodInfo.GetCustomAttributes(true)
+            .FirstOrDefault(
+                x => (x is RedisCacheAttribute));
 
-        }
+        var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
+        return castedExecutedMethodAttribute.CustomCacheName is not null;
+    }
 
-        public string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters)
-        {
-            ArgumentNullException.ThrowIfNull(argument: parameters);
-            return HasCustomCacheNameDefined(serviceMethodInfo) ?
-                                                            GetCustomCacheName(serviceMethodInfo)
-                                                            :
-                                                            GetDefaultCacheName(executedMethodInfo, parameters);
-        }
+    private static string GetCustomCacheName(MethodInfo methodInfo)
+    {
+        object? executedMethodAttribute = methodInfo.GetCustomAttributes(true)
+            .FirstOrDefault(
+                x => (x is RedisCacheAttribute));
 
-        public bool HasCustomCacheNameDefined(MethodInfo methodInfo)
-        {
-            var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
-                                    .FirstOrDefault(
-                                                        x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType())
-                                                    );
+        var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
 
-            var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
-            return castedExecutedMethodAttribute.CustomCacheName is not null;
-        }
+        return castedExecutedMethodAttribute.CustomCacheName;
+    }
 
-        public string GetCustomCacheName(MethodInfo methodInfo)
-        {
-            var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
-                        .FirstOrDefault(
-                                            x => typeof(RedisCacheAttribute).IsAssignableFrom(x.GetType())
-                                        );
+    private static string GetDefaultCacheName(MethodInfo methodInfo, string[] parameters)
+    {
+        string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
+        return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
+    }
 
-            var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
+    public string ConvertCacheKeyToConfigKey(string key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
 
-            return castedExecutedMethodAttribute.CustomCacheName;
-        }
-
-        public string GetDefaultCacheName(MethodInfo methodInfo, string[] parameters)
-        {
-            string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
-            return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
-        }
-
-        public string ConvertCacheKeyToConfigKey(string key)
-        {
-            ArgumentNullException.ThrowIfNull(key);
-
-            return (key.Replace(KeyConstants.MethodFullPathSeparator, KeyConstants.ConfigMethodFullPathSeparator))
-                    .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
-        }
+        return (key.Replace(KeyConstants.MethodFullPathSeparator, KeyConstants.ConfigMethodFullPathSeparator))
+            .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
     }
 }

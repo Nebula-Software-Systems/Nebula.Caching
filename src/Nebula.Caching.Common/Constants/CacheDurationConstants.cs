@@ -1,7 +1,6 @@
-namespace Nebula.Caching.Common.Constants
+namespace Nebula.Caching.Common.Constants;
+
+public static class CacheDurationConstants
 {
-    public static class CacheDurationConstants
-    {
-        public static int DefaultCacheDurationInSeconds = 600;
-    }
+    public static int DefaultCacheDurationInSeconds = 600;
 }

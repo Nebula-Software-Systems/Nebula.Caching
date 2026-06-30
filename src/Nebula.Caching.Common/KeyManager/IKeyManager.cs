@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using AspectCore.DynamicProxy;
-using AspectCore.DynamicProxy.Parameters;
 
-namespace Nebula.Caching.Common.KeyManager
+namespace Nebula.Caching.Common.KeyManager;
+
+public interface IKeyManager
 {
-    public interface IKeyManager
-    {
-        string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters);
-        string ConvertCacheKeyToConfigKey(string key);
-    }
+    string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters);
+    string ConvertCacheKeyToConfigKey(string key);
 }

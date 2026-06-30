@@ -1,8 +1,7 @@
 using Nebula.Caching.Common.Attributes;
 
-namespace Nebula.Caching.Redis.Attributes
+namespace Nebula.Caching.Redis.Attributes;
+
+public class RedisCacheAttribute : BaseAttribute
 {
-    public class RedisCacheAttribute : BaseAttribute
-    {
-    }
 }
