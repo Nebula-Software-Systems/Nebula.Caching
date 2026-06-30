@@ -3,56 +3,46 @@ using Microsoft.Extensions.Caching.Memory;
 using Nebula.Caching.Common.CacheManager;
 using Nebula.Caching.Common.Compression;
 
-namespace Nebula.Caching.InMemory.CacheManager
+namespace Nebula.Caching.InMemory.CacheManager;
+
+public class InMemoryCacheManager(IMemoryCache memoryCache) : ICacheManager
 {
-    public class InMemoryCacheManager : ICacheManager
+    public bool CacheExists(string key)
     {
-        private readonly IMemoryCache _memoryCache;
-        private readonly GZipCompression _gzipCompression;
+        return memoryCache.TryGetValue(key, out _);
+    }
 
-        public InMemoryCacheManager(IMemoryCache memoryCache, GZipCompression gzipCompression)
+    public Task<bool> CacheExistsAsync(string key)
+    {
+        return Task.Run(() => CacheExists(key));
+    }
+
+    public string Get(string key)
+    {
+        memoryCache.TryGetValue(key, out byte[] value);
+        byte[] data = GZipCompression.Decompress(value);
+        return Encoding.UTF8.GetString(data);
+    }
+
+    public Task<string> GetAsync(string key)
+    {
+        return Task.Run(() => Get(key));
+    }
+
+    public void Set(string key, string value, TimeSpan expiration)
+    {
+        var cacheEntryOptions = new MemoryCacheEntryOptions
         {
-            _memoryCache = memoryCache;
-            _gzipCompression = gzipCompression;
-        }
+            AbsoluteExpirationRelativeToNow = expiration
+        };
 
-        public bool CacheExists(string key)
-        {
-            return _memoryCache.TryGetValue(key, out _);
-        }
+        byte[] compressedData = GZipCompression.Compress(Encoding.UTF8.GetBytes(value));
 
-        public async Task<bool> CacheExistsAsync(string key)
-        {
-            return await Task.Run(() => CacheExists(key)).ConfigureAwait(false);
-        }
+        memoryCache.Set(key, compressedData, cacheEntryOptions);
+    }
 
-        public string Get(string key)
-        {
-            _memoryCache.TryGetValue(key, out byte[] value);
-            var data = _gzipCompression.Decompress(value);
-            return Encoding.UTF8.GetString(data);
-        }
-
-        public async Task<string> GetAsync(string key)
-        {
-            return await Task.Run(() => Get(key)).ConfigureAwait(false);
-        }
-
-        public void Set(string key, string value, TimeSpan expiration)
-        {
-            var cacheEntryOptions = new MemoryCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = expiration
-            };
-
-            byte[] compressedData = _gzipCompression.Compress(Encoding.UTF8.GetBytes(value));
-
-            _memoryCache.Set(key, compressedData, cacheEntryOptions);
-        }
-
-        public async Task SetAsync(string key, string value, TimeSpan expiration)
-        {
-            await Task.Run(() => Set(key, value, expiration)).ConfigureAwait(false);
-        }
+    public Task SetAsync(string key, string value, TimeSpan expiration)
+    {
+        return Task.Run(() => Set(key, value, expiration));
     }
 }

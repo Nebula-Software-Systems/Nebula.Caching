@@ -1,10 +1,9 @@
-using Common.Settings;
+using Nebula.Caching.Common.Settings;
 
-namespace Nebula.Caching.MemCached.Settings
+namespace Nebula.Caching.Memcached.Settings;
+
+public class MemCachedOptions : BaseOptions
 {
-    public class MemCachedOptions : BaseOptions
-    {
-        public string CacheServiceUrl { get; init; } = "";
-        public override string ConfigurationRoot { get; set; } = "MemCached";
-    }
+    public string CacheServiceUrl { get; init; } = "";
+    public override string ConfigurationRoot { get; set; } = "MemCached";
 }

@@ -1,9 +1,7 @@
 using Nebula.Caching.Common.Settings;
 
-namespace Nebula.Caching.MemCached.Settings
-{
-    public class MemCachedConfigurations : Configurations
-    {
+namespace Nebula.Caching.Memcached.Settings;
 
-    }
+public class MemCachedConfigurations : Configurations
+{
 }

@@ -1,12 +1,11 @@
 using Nebula.Caching.Common.Constants;
 
-namespace Nebula.Caching.Common.Attributes
+namespace Nebula.Caching.Common.Attributes;
+
+[AttributeUsage(AttributeTargets.Method)]
+public class BaseAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Method, Inherited = true)]
-    public class BaseAttribute : Attribute
-    {
-        public int CacheDurationInSeconds { get; set; } = CacheDurationConstants.DefaultCacheDurationInSeconds;
-        public string? CacheGroup { get; set; }
-        public string? CustomCacheName { get; set; }
-    }
+    public int CacheDurationInSeconds { get; set; } = CacheDurationConstants.DefaultCacheDurationInSeconds;
+    public string? CacheGroup { get; set; }
+    public string? CustomCacheName { get; set; }
 }

@@ -1,8 +1,7 @@
-namespace Redis.Settings
+namespace Nebula.Caching.Redis.Settings;
+
+public enum RedisConfigurationFlavour
 {
-    public enum RedisConfigurationFlavour
-    {
-        Vanilla,
-        Configured
-    }
+    Vanilla,
+    Configured
 }

@@ -1,9 +1,8 @@
-using Common.Settings;
+using Nebula.Caching.Common.Settings;
 
-namespace Nebula.Caching.InMemory.Settings
+namespace Nebula.Caching.InMemory.Settings;
+
+public class InMemoryOptions : BaseOptions
 {
-    public class InMemoryOptions : BaseOptions
-    {
-        public override string ConfigurationRoot { get; set; } = "InMemory";
-    }
+    public override string ConfigurationRoot { get; set; } = "InMemory";
 }

@@ -3,60 +3,51 @@ using Nebula.Caching.Common.KeyManager;
 using Nebula.Caching.Memcached.Attributes;
 using System.Reflection;
 
-namespace Nebula.Caching.Memcached.KeyManager
+namespace Nebula.Caching.Memcached.KeyManager;
+
+public class MemCachedKeyManager : IKeyManager
 {
-    public class MemCachedKeyManager : IKeyManager
+    public string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters)
     {
+        ArgumentNullException.ThrowIfNull(argument: parameters);
+        return HasCustomCacheNameDefined(serviceMethodInfo) ?
+            GetCustomCacheName(serviceMethodInfo)
+            :
+            GetDefaultCacheName(executedMethodInfo, parameters);
+    }
 
-        public MemCachedKeyManager()
-        {
+    private static bool HasCustomCacheNameDefined(MethodInfo methodInfo)
+    {
+        object? executedMethodAttribute = methodInfo.GetCustomAttributes(true)
+            .FirstOrDefault(
+                x => (x is MemCachedCacheAttribute));
 
-        }
+        var castedExecutedMethodAttribute = executedMethodAttribute as MemCachedCacheAttribute;
+        return castedExecutedMethodAttribute.CustomCacheName is not null;
+    }
 
-        public string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters)
-        {
-            ArgumentNullException.ThrowIfNull(argument: parameters);
-            return HasCustomCacheNameDefined(serviceMethodInfo) ?
-                                                            GetCustomCacheName(serviceMethodInfo)
-                                                            :
-                                                            GetDefaultCacheName(executedMethodInfo, parameters);
-        }
+    private static string GetCustomCacheName(MethodInfo methodInfo)
+    {
+        object? executedMethodAttribute = methodInfo.GetCustomAttributes(true)
+            .FirstOrDefault(
+                x => (x is MemCachedCacheAttribute));
 
-        public bool HasCustomCacheNameDefined(MethodInfo methodInfo)
-        {
-            var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
-                                    .FirstOrDefault(
-                                                        x => typeof(MemCachedCacheAttribute).IsAssignableFrom(x.GetType())
-                                                    );
+        var castedExecutedMethodAttribute = executedMethodAttribute as MemCachedCacheAttribute;
 
-            var castedExecutedMethodAttribute = executedMethodAttribute as MemCachedCacheAttribute;
-            return castedExecutedMethodAttribute.CustomCacheName is not null;
-        }
+        return castedExecutedMethodAttribute.CustomCacheName;
+    }
 
-        public string GetCustomCacheName(MethodInfo methodInfo)
-        {
-            var executedMethodAttribute = methodInfo.GetCustomAttributes(true)
-                        .FirstOrDefault(
-                                            x => typeof(MemCachedCacheAttribute).IsAssignableFrom(x.GetType())
-                                        );
+    private static string GetDefaultCacheName(MethodInfo methodInfo, string[] parameters)
+    {
+        string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
+        return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
+    }
 
-            var castedExecutedMethodAttribute = executedMethodAttribute as MemCachedCacheAttribute;
+    public string ConvertCacheKeyToConfigKey(string key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
 
-            return castedExecutedMethodAttribute.CustomCacheName;
-        }
-
-        public string GetDefaultCacheName(MethodInfo methodInfo, string[] parameters)
-        {
-            string methodParamsAggregated = string.Join(KeyConstants.MethodAndParametersSeparator, parameters);
-            return $"{methodInfo.DeclaringType.FullName}{KeyConstants.MethodAndParametersSeparator}{methodInfo.Name}{(parameters.Length > 0 ? KeyConstants.MethodAndParametersSeparator : "")}{methodParamsAggregated}";
-        }
-
-        public string ConvertCacheKeyToConfigKey(string key)
-        {
-            ArgumentNullException.ThrowIfNull(key);
-
-            return (key.Replace(KeyConstants.MethodFullPathSeparator, KeyConstants.ConfigMethodFullPathSeparator))
-                    .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
-        }
+        return (key.Replace(KeyConstants.MethodFullPathSeparator, KeyConstants.ConfigMethodFullPathSeparator))
+            .Replace(KeyConstants.MethodAndParametersSeparator, KeyConstants.ConfigMethodAndParametersSeparator);
     }
 }
