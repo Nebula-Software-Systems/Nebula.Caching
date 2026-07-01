@@ -81,10 +81,6 @@ Our documentation can be found [here](docs/documentation/).
 
 Some useful code snippets can be found [here](docs/samples/).
 
-## Roadmap
-
-To check what we want to achieve in the future, please refer to our [ROADMAP](docs/roadmap/Roadmap.md).
-
 ## Contributing
 
 This project welcomes and appreciates any contributions made.
