@@ -1,4 +1,5 @@
 using Enyim.Caching;
+using Enyim.Caching.Memcached.Results;
 using Nebula.Caching.Common.CacheManager;
 
 namespace Nebula.Caching.Memcached.CacheManager;
@@ -12,7 +13,7 @@ public class MemCachedCacheManager(IMemcachedClient memCached) : ICacheManager
 
     public async Task<bool> CacheExistsAsync(string key)
     {
-        var cache = (await memCached.GetAsync<string>(key).ConfigureAwait(false));
+        IGetOperationResult<string>? cache = (await memCached.GetAsync<string>(key).ConfigureAwait(false));
         return cache.HasValue;
     }
 

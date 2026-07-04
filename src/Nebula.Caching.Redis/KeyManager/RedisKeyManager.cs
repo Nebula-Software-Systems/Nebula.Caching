@@ -1,7 +1,7 @@
 using System.Reflection;
+using Nebula.Caching.Common.Attributes;
 using Nebula.Caching.Common.Constants;
 using Nebula.Caching.Common.KeyManager;
-using Nebula.Caching.Redis.Attributes;
 
 namespace Nebula.Caching.Redis.KeyManager;
 
@@ -20,9 +20,9 @@ public class RedisKeyManager : IKeyManager
     {
         object? executedMethodAttribute = methodInfo.GetCustomAttributes(true)
             .FirstOrDefault(
-                x => (x is RedisCacheAttribute));
+                x => (x is NebulaCache));
 
-        var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
+        NebulaCache? castedExecutedMethodAttribute = executedMethodAttribute as NebulaCache;
         return castedExecutedMethodAttribute.CustomCacheName is not null;
     }
 
@@ -30,9 +30,9 @@ public class RedisKeyManager : IKeyManager
     {
         object? executedMethodAttribute = methodInfo.GetCustomAttributes(true)
             .FirstOrDefault(
-                x => (x is RedisCacheAttribute));
+                x => (x is NebulaCache));
 
-        var castedExecutedMethodAttribute = executedMethodAttribute as RedisCacheAttribute;
+        NebulaCache? castedExecutedMethodAttribute = executedMethodAttribute as NebulaCache;
 
         return castedExecutedMethodAttribute.CustomCacheName;
     }

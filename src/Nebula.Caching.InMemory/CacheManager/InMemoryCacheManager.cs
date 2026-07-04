@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.Extensions.Caching.Memory;
 using Nebula.Caching.Common.CacheManager;
-using Nebula.Caching.Common.Compression;
+using Nebula.Caching.InMemory.Compression;
 
 namespace Nebula.Caching.InMemory.CacheManager;
 
@@ -31,7 +31,7 @@ public class InMemoryCacheManager(IMemoryCache memoryCache) : ICacheManager
 
     public void Set(string key, string value, TimeSpan expiration)
     {
-        var cacheEntryOptions = new MemoryCacheEntryOptions
+        MemoryCacheEntryOptions cacheEntryOptions = new()
         {
             AbsoluteExpirationRelativeToNow = expiration
         };

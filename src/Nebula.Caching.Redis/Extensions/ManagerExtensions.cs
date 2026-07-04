@@ -14,14 +14,12 @@ public static class ManagerExtensions
     {
         services.AddScoped<ICacheManager>(serviceProvider =>
         {
-            var database = serviceProvider.GetService<IDatabase>();
+            IConnectionMultiplexer? connectionMultiplexer = serviceProvider.GetRequiredService<IConnectionMultiplexer>();
+            IDatabase? database = connectionMultiplexer.GetDatabase();
             return new RedisCacheManager(database);
         });
 
-        services.AddScoped<IKeyManager>(serviceProvider =>
-        {
-            return new RedisKeyManager();
-        });
+        services.AddScoped<IKeyManager>(_ => new RedisKeyManager());
 
         return services;
     }

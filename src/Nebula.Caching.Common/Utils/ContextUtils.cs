@@ -9,15 +9,15 @@ namespace Nebula.Caching.Common.Utils;
 
 public class ContextUtils(IKeyManager keyManager, BaseOptions baseOptions) : IContextUtils
 {
-    public int GetCacheDuration<T>(string key, AspectContext context) where T : BaseAttribute
+    public int GetCacheDuration(string key, AspectContext context)
     {
         return CacheExistInConfiguration(key, context) ?
             RetrieveCacheExpirationFromConfig(key, context)
             :
-            RetrieveCacheExpirationFromAttribute<T>(context);
+            RetrieveCacheExpirationFromAttribute(context);
     }
 
-    public bool CacheExistInConfiguration(string key, AspectContext context)
+    private bool CacheExistInConfiguration(string key, AspectContext context)
     {
         if (baseOptions.CacheSettings is null) return false;
 
@@ -37,19 +37,19 @@ public class ContextUtils(IKeyManager keyManager, BaseOptions baseOptions) : ICo
 
     public string[] GetMethodParameters(AspectContext context)
     {
-        string?[] methodParams = context.Parameters.Select((object obj) =>
-        {
-            return obj.ToString();
-        }).ToArray();
+        string?[] methodParams = context.Parameters
+            .Select(obj => obj.ToString())
+            .ToArray();
+
         return methodParams;
     }
 
-    public bool IsAttributeOfType<T>(AspectContext context) where T : BaseAttribute
+    public bool IsAttributeOfType(AspectContext context)
     {
         object? executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
             .FirstOrDefault(
-                x => (x is T));
-        return executedMethodAttribute is T;
+                x => (x is NebulaCache));
+        return executedMethodAttribute is NebulaCache;
     }
 
     public bool CacheConfigSectionExists()
@@ -72,14 +72,14 @@ public class ContextUtils(IKeyManager keyManager, BaseOptions baseOptions) : ICo
         throw new InvalidOperationException($"Cache key {key} either doesn't exist on the configuration or if exist has an invalid value for its duration. Cache duration should be greater than zero.");
     }
 
-    public int RetrieveCacheExpirationFromAttribute<T>(AspectContext context) where T : BaseAttribute
+    public int RetrieveCacheExpirationFromAttribute(AspectContext context)
     {
         object? executedMethodAttribute = context.ServiceMethod.GetCustomAttributes(true)
             .FirstOrDefault(
-                x => x is T
+                x => x is NebulaCache
             );
 
-        var castedExecutedMethodAttribute = executedMethodAttribute as T;
+        NebulaCache? castedExecutedMethodAttribute = executedMethodAttribute as NebulaCache;
 
         return IsCacheGroupDefined(castedExecutedMethodAttribute) ?
             RetrieveCacheExpirationFromCacheGroup(castedExecutedMethodAttribute.CacheGroup)
@@ -87,7 +87,7 @@ public class ContextUtils(IKeyManager keyManager, BaseOptions baseOptions) : ICo
             castedExecutedMethodAttribute.CacheDurationInSeconds;
     }
 
-    private static bool IsCacheGroupDefined(BaseAttribute attribute)
+    private static bool IsCacheGroupDefined(NebulaCache attribute)
     {
         return !string.IsNullOrEmpty(attribute.CacheGroup);
     }
@@ -111,9 +111,9 @@ public class ContextUtils(IKeyManager keyManager, BaseOptions baseOptions) : ICo
 
     private static string[] GenerateParamsFromParamCollection(ParameterCollection parameters)
     {
-        List<string> genericParamsList = new List<string>();
+        List<string> genericParamsList = new();
 
-        foreach (var param in parameters)
+        foreach (Parameter? param in parameters)
         {
             string genericParam = GenerateGeneriConfigCacheParameter(param.Name);
             genericParamsList.Add(genericParam);

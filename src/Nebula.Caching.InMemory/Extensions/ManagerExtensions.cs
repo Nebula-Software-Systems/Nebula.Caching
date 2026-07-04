@@ -15,7 +15,7 @@ public static class ManagerExtensions
 
         services.AddScoped<ICacheManager>(serviceProvider =>
         {
-            var memoryCache = serviceProvider.GetRequiredService<IMemoryCache>();
+            IMemoryCache memoryCache = serviceProvider.GetRequiredService<IMemoryCache>();
             return new InMemoryCacheManager(memoryCache);
         });
 

@@ -1,7 +1,7 @@
 using System.Reflection;
+using Nebula.Caching.Common.Attributes;
 using Nebula.Caching.Common.Constants;
 using Nebula.Caching.Common.KeyManager;
-using Nebula.Caching.InMemory.Attributes;
 
 namespace Nebula.Caching.InMemory.KeyManager;
 
@@ -33,9 +33,9 @@ public class InMemoryKeyManager : IKeyManager
     {
         object? executedMethodAttribute = methodInfo.GetCustomAttributes(true)
             .FirstOrDefault(
-                x => (x is InMemoryCacheAttribute));
+                x => (x is NebulaCache));
 
-        var castedExecutedMethodAttribute = executedMethodAttribute as InMemoryCacheAttribute;
+        NebulaCache? castedExecutedMethodAttribute = executedMethodAttribute as NebulaCache;
 
         return castedExecutedMethodAttribute?.CustomCacheName;
     }

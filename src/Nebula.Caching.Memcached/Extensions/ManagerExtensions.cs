@@ -11,14 +11,14 @@ public static class ManagerExtensions
 {
     public static IServiceCollection AddManagerExtensions(this IServiceCollection services)
     {
-        var memCachedServer = services.BuildServiceProvider().GetService<IMemcachedClient>();
+        IMemcachedClient? memCachedServer = services.BuildServiceProvider().GetService<IMemcachedClient>();
 
-        services.AddScoped<ICacheManager>(serviceProvider =>
+        services.AddScoped<ICacheManager>(_ =>
         {
             return new MemCachedCacheManager(memCachedServer);
         });
 
-        services.AddScoped<IKeyManager>(serviceProvider =>
+        services.AddScoped<IKeyManager>(_ =>
         {
             return new MemCachedKeyManager();
         });

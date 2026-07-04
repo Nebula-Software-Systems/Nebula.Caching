@@ -1,7 +1,7 @@
 using Nebula.Caching.Common.Constants;
 using Nebula.Caching.Common.KeyManager;
-using Nebula.Caching.Memcached.Attributes;
 using System.Reflection;
+using Nebula.Caching.Common.Attributes;
 
 namespace Nebula.Caching.Memcached.KeyManager;
 
@@ -20,9 +20,9 @@ public class MemCachedKeyManager : IKeyManager
     {
         object? executedMethodAttribute = methodInfo.GetCustomAttributes(true)
             .FirstOrDefault(
-                x => (x is MemCachedCacheAttribute));
+                x => (x is NebulaCache));
 
-        var castedExecutedMethodAttribute = executedMethodAttribute as MemCachedCacheAttribute;
+        NebulaCache? castedExecutedMethodAttribute = executedMethodAttribute as NebulaCache;
         return castedExecutedMethodAttribute.CustomCacheName is not null;
     }
 
@@ -30,9 +30,9 @@ public class MemCachedKeyManager : IKeyManager
     {
         object? executedMethodAttribute = methodInfo.GetCustomAttributes(true)
             .FirstOrDefault(
-                x => (x is MemCachedCacheAttribute));
+                x => (x is NebulaCache));
 
-        var castedExecutedMethodAttribute = executedMethodAttribute as MemCachedCacheAttribute;
+        NebulaCache? castedExecutedMethodAttribute = executedMethodAttribute as NebulaCache;
 
         return castedExecutedMethodAttribute.CustomCacheName;
     }

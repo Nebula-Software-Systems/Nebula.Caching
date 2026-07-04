@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using Nebula.Caching.Common.Settings;
 using Nebula.Caching.Common.Utils;
 using Nebula.Caching.InMemory.KeyManager;
-using Nebula.Caching.InMemory.Settings;
 
 namespace Nebula.Caching.InMemory.UtilsExtensions;
 
@@ -11,8 +11,8 @@ public static class CacheUtilsExtensions
     {
         services.AddScoped<IContextUtils>(serviceProvider =>
         {
-            var inMemoryOptions = serviceProvider.GetService<InMemoryOptions>();
-            return new ContextUtils(new InMemoryKeyManager(), inMemoryOptions);
+            BaseOptions? inMemoryOptions = serviceProvider.GetService<BaseOptions>();
+            return new ContextUtils(new InMemoryKeyManager(), inMemoryOptions!);
         });
 
         return services;
