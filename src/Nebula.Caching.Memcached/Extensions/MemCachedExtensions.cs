@@ -11,7 +11,6 @@ public static class MemCachedExtensions
         return services
             .AddNebulaCache()
             .AddBaseOptions(configs)
-            .AddManagerExtensions()
-            .AddUtilsExtensions();
+            .AddManagerExtensions();
     }
 }

@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Options;
 using Nebula.Caching.Common.Extensions;
 using Nebula.Caching.Redis.Extensions;
 using RedisSample.Services;

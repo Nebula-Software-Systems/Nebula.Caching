@@ -11,7 +11,6 @@ public static class RedisExtensions
         return services
             .AddNebulaCache()
             .AddBaseOptions(configs)
-            .AddManagerExtensions()
-            .AddUtilsExtensions();
+            .AddManagerExtensions();
     }
 }
