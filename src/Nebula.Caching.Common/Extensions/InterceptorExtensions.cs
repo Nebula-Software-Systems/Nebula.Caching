@@ -28,6 +28,8 @@ public static class InterceptorExtensions
             return new ContextUtils(keyManager, baseOptions);
         });
 
+        services.AddScoped<IKeyManager, NebulaKeyManager>();
+
         return services;
     }
 }

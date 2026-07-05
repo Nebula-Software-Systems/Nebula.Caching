@@ -1,9 +1,7 @@
 using Enyim.Caching;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Caching.Common.CacheManager;
-using Nebula.Caching.Common.KeyManager;
 using Nebula.Caching.Memcached.CacheManager;
-using Nebula.Caching.Memcached.KeyManager;
 
 namespace Nebula.Caching.Memcached.Extensions;
 
@@ -13,15 +11,7 @@ public static class ManagerExtensions
     {
         IMemcachedClient? memCachedServer = services.BuildServiceProvider().GetService<IMemcachedClient>();
 
-        services.AddScoped<ICacheManager>(_ =>
-        {
-            return new MemCachedCacheManager(memCachedServer);
-        });
-
-        services.AddScoped<IKeyManager>(_ =>
-        {
-            return new MemCachedKeyManager();
-        });
+        services.AddScoped<ICacheManager>(_ => new MemCachedCacheManager(memCachedServer));
 
         return services;
     }

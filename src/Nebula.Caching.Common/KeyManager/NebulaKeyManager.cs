@@ -1,11 +1,10 @@
-using Nebula.Caching.Common.Constants;
-using Nebula.Caching.Common.KeyManager;
-using System.Reflection;
+﻿using System.Reflection;
 using Nebula.Caching.Common.Attributes;
+using Nebula.Caching.Common.Constants;
 
-namespace Nebula.Caching.Memcached.KeyManager;
+namespace Nebula.Caching.Common.KeyManager;
 
-public class MemCachedKeyManager : IKeyManager
+public class NebulaKeyManager : IKeyManager
 {
     public string GenerateKey(MethodInfo executedMethodInfo, MethodInfo serviceMethodInfo, string[] parameters)
     {
