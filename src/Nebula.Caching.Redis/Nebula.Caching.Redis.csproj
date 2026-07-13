@@ -9,6 +9,6 @@
     <ProjectReference Include="..\Nebula.Caching.Common\Nebula.Caching.Common.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <PackageReference Include="StackExchange.Redis" Version="3.0.11" />
+    <PackageReference Include="StackExchange.Redis" Version="3.0.17" />
   </ItemGroup>
 </Project>
